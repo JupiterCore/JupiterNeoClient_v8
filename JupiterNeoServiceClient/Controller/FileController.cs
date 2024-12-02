@@ -14,8 +14,12 @@ namespace JupiterNeoServiceClient.Controllers
         private readonly FileModel _fileModel;
         private readonly FileProcessor _fileProcessor;
 
-        public FileController(FileModel fileModel, FileProcessor fileProcessor, MetadataModel metaModel, JpApi api)
-            : base(metaModel, api)
+        public FileController(
+            FileModel fileModel,
+            FileProcessor fileProcessor,
+            MetadataModel metaModel,
+            JpApi api
+        ) : base(metaModel, api)
         {
             _fileModel = fileModel ?? throw new ArgumentNullException(nameof(fileModel));
             _fileProcessor = fileProcessor ?? throw new ArgumentNullException(nameof(fileProcessor));
