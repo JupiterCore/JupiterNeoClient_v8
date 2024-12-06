@@ -16,12 +16,12 @@ namespace JpCommon
 
     public class JpApi : BaseHttp
     {
-        public JpApi()
+        public JpApi() : base()
         {
             baseURL = JpConstants.ApiBaseUrl;
         }
 
-        public JpApi(string baseURL)
+        public JpApi(string baseURL) : base()
         {
             this.baseURL = baseURL;
         }
@@ -171,4 +171,3 @@ namespace JpCommon
         }
     }
 }
-

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using System.Net.Http;
 
 namespace JupiterNeoServiceClient.Utils
 {
@@ -42,13 +43,11 @@ namespace JupiterNeoServiceClient.Utils
             return client.GetAsync(baseURL + path);
         }
 
-
         public Task<HttpResponseMessage> post(string path, object data)
         {
             var jsonData = toJSON(data);
             return client.PostAsync(baseURL + path, jsonData);
         }
-
 
         public Task put(string path, object data)
         {
@@ -58,7 +57,7 @@ namespace JupiterNeoServiceClient.Utils
 
         public Task delete(string path)
         {
-            return client.PutAsync(baseURL + path, null);
+            return client.DeleteAsync(baseURL + path); // Cambié client.PutAsync por client.DeleteAsync para eliminar el recurso
         }
 
         public async Task<dynamic> getJSON(HttpResponseMessage response)
@@ -66,4 +65,5 @@ namespace JupiterNeoServiceClient.Utils
             string responseBody = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<dynamic>(responseBody);
         }
-    }
+    } 
+}

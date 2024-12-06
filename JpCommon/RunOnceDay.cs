@@ -11,7 +11,7 @@ namespace JpCommon
     public class RunOnceADay
     {
         private DateTime _lastDateRun;
-        private readonly Timer _runnerTimer;
+        private readonly System.Timers.Timer _runnerTimer;
         private readonly Func<Task<bool>> _callback;
         private bool _isRunning;
         private readonly int _maxAttempts;
@@ -31,7 +31,7 @@ namespace JpCommon
             _maxAttempts = maxAttempts;
             _attempts = 0;
 
-            _runnerTimer = new Timer
+            _runnerTimer = new System.Timers.Timer
             {
 #if DEBUG
                 Interval = 1_000, // 1 segundo para pruebas en modo DEBUG.

@@ -5,7 +5,7 @@ VisualStudioVersion = 17.10.35122.118
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JupiterNeoServiceClient", "JupiterNeoServiceClient.csproj", "{BEA03F2C-9C89-4849-BAB4-785948FEDC8E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JpCommon", "..\JpCommon\JpCommon.csproj", "{DA00B33B-251A-4493-8D00-5A423C559C8B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JpCommon", "..\JpCommon\JpCommon.csproj", "{DA00B33B-251A-4493-8D00-5A423C559C8B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

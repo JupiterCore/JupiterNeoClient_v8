@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "QbnZ3pxoRFM=",
+  "dgSpecHash": "2tzBVl/rA2g=",
   "success": true,
   "projectFilePath": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\JupiterNeoServiceClient.csproj",
   "expectedPackageFiles": [
@@ -45,6 +45,7 @@
     "C:\\Users\\GABY\\.nuget\\packages\\sqlitepclraw.provider.e_sqlite3\\2.1.10\\sqlitepclraw.provider.e_sqlite3.2.1.10.nupkg.sha512",
     "C:\\Users\\GABY\\.nuget\\packages\\sqlkata\\2.4.0\\sqlkata.2.4.0.nupkg.sha512",
     "C:\\Users\\GABY\\.nuget\\packages\\sqlkata.execution\\2.4.0\\sqlkata.execution.2.4.0.nupkg.sha512",
+    "C:\\Users\\GABY\\.nuget\\packages\\system.codedom\\9.0.0\\system.codedom.9.0.0.nupkg.sha512",
     "C:\\Users\\GABY\\.nuget\\packages\\system.collections\\4.3.0\\system.collections.4.3.0.nupkg.sha512",
     "C:\\Users\\GABY\\.nuget\\packages\\system.collections.concurrent\\4.3.0\\system.collections.concurrent.4.3.0.nupkg.sha512",
     "C:\\Users\\GABY\\.nuget\\packages\\system.diagnostics.debug\\4.3.0\\system.diagnostics.debug.4.3.0.nupkg.sha512",
@@ -54,6 +55,7 @@
     "C:\\Users\\GABY\\.nuget\\packages\\system.globalization\\4.3.0\\system.globalization.4.3.0.nupkg.sha512",
     "C:\\Users\\GABY\\.nuget\\packages\\system.io\\4.3.0\\system.io.4.3.0.nupkg.sha512",
     "C:\\Users\\GABY\\.nuget\\packages\\system.io.pipelines\\9.0.0\\system.io.pipelines.9.0.0.nupkg.sha512",
+    "C:\\Users\\GABY\\.nuget\\packages\\system.management\\9.0.0\\system.management.9.0.0.nupkg.sha512",
     "C:\\Users\\GABY\\.nuget\\packages\\system.memory\\4.5.3\\system.memory.4.5.3.nupkg.sha512",
     "C:\\Users\\GABY\\.nuget\\packages\\system.reflection\\4.3.0\\system.reflection.4.3.0.nupkg.sha512",
     "C:\\Users\\GABY\\.nuget\\packages\\system.reflection.primitives\\4.3.0\\system.reflection.primitives.4.3.0.nupkg.sha512",

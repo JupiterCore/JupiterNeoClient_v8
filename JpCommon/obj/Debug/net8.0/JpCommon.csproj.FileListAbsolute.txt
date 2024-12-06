@@ -1,0 +1,13 @@
+C:\Users\GABY\Desktop\JupiterNeoClient_v8\JpCommon\obj\Debug\net8.0\JpCommon.csproj.AssemblyReference.cache
+C:\Users\GABY\Desktop\JupiterNeoClient_v8\JpCommon\obj\Debug\net8.0\JpCommon.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\GABY\Desktop\JupiterNeoClient_v8\JpCommon\obj\Debug\net8.0\JpCommon.AssemblyInfoInputs.cache
+C:\Users\GABY\Desktop\JupiterNeoClient_v8\JpCommon\obj\Debug\net8.0\JpCommon.AssemblyInfo.cs
+C:\Users\GABY\Desktop\JupiterNeoClient_v8\JpCommon\obj\Debug\net8.0\JpCommon.csproj.CoreCompileInputs.cache
+C:\Users\GABY\Desktop\JupiterNeoClient_v8\JpCommon\obj\Debug\net8.0\JpCommon.sourcelink.json
+C:\Users\GABY\Desktop\JupiterNeoClient_v8\JpCommon\bin\Debug\net8.0\JpCommon.deps.json
+C:\Users\GABY\Desktop\JupiterNeoClient_v8\JpCommon\bin\Debug\net8.0\JpCommon.dll
+C:\Users\GABY\Desktop\JupiterNeoClient_v8\JpCommon\bin\Debug\net8.0\JpCommon.pdb
+C:\Users\GABY\Desktop\JupiterNeoClient_v8\JpCommon\obj\Debug\net8.0\JpCommon.dll
+C:\Users\GABY\Desktop\JupiterNeoClient_v8\JpCommon\obj\Debug\net8.0\refint\JpCommon.dll
+C:\Users\GABY\Desktop\JupiterNeoClient_v8\JpCommon\obj\Debug\net8.0\JpCommon.pdb
+C:\Users\GABY\Desktop\JupiterNeoClient_v8\JpCommon\obj\Debug\net8.0\ref\JpCommon.dll

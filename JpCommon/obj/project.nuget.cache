@@ -1,10 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "rBcEwRHzW4Y=",
+  "dgSpecHash": "UO8qRAuO9C0=",
   "success": true,
   "projectFilePath": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JpCommon\\JpCommon.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\GABY\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
+    "C:\\Users\\GABY\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
+    "C:\\Users\\GABY\\.nuget\\packages\\system.codedom\\9.0.0\\system.codedom.9.0.0.nupkg.sha512",
+    "C:\\Users\\GABY\\.nuget\\packages\\system.management\\9.0.0\\system.management.9.0.0.nupkg.sha512"
   ],
   "logs": []
 }

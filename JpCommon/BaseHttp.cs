@@ -4,25 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-
-
 using Newtonsoft.Json;
 using System.Net.Http;
-using System.Threading.Tasks;
-
-
 
 namespace JpCommon
 {
     public class BaseHttp
     {
-        public string baseURL { get; set; } = String.Empty;
+        public string baseURL { get; set; } = string.Empty;
         protected static readonly HttpClient client = new HttpClient();
 
-        public StringContent toJSON(object data)
+        public StringContent ToJSON(object data)
         {
             string jsonString = JsonConvert.SerializeObject(data);
-            return new StringContent(jsonString, System.Text.Encoding.UTF8, "application/json");
+            return new StringContent(jsonString, Encoding.UTF8, "application/json");
         }
 
         public string BuildQueryParams(string path, Dictionary<string, string> queryParams)
@@ -37,39 +32,45 @@ namespace JpCommon
             return builder.ToString();
         }
 
-        public Task<HttpResponseMessage> get(string path, Dictionary<string, string> queryParams)
+        // Método Get con parámetros de consulta (asíncrono)
+        public async Task<HttpResponseMessage> Get(string path, Dictionary<string, string> queryParams)
         {
-            return client.GetAsync(this.BuildQueryParams(path, queryParams));
+            return await client.GetAsync(this.BuildQueryParams(path, queryParams));
         }
 
-        public Task<HttpResponseMessage> get(string path)
+        // Método Get sin parámetros de consulta (asíncrono)
+        public async Task<HttpResponseMessage> Get(string path)
         {
-            string fullPath = baseURL + path;
-            return client.GetAsync(baseURL + path);
+            string fullPath = this.baseURL + path;
+            return await client.GetAsync(fullPath);
         }
 
-        public Task<HttpResponseMessage> post(string path, object data)
+        // Método Post (asíncrono)
+        public async Task<HttpResponseMessage> Post(string path, object data)
         {
-            var jsonData = toJSON(data);
-            return client.PostAsync(baseURL + path, jsonData);
+            var jsonData = ToJSON(data);
+            return await client.PostAsync(this.baseURL + path, jsonData);
         }
 
-        public Task put(string path, object data)
+        // Método Put (asíncrono)
+        public async Task<HttpResponseMessage> Put(string path, object data)
         {
-            var jsonData = toJSON(data);
-            return client.PutAsync(baseURL + path, jsonData);
+            var jsonData = ToJSON(data);
+            return await client.PutAsync(this.baseURL + path, jsonData);
         }
 
-        public Task delete(string path)
+        // Método Delete (asíncrono)
+        public async Task<HttpResponseMessage> Delete(string path)
         {
-            return client.PutAsync(baseURL + path, null);
+            return await client.DeleteAsync(this.baseURL + path);
         }
 
-        public async Task<dynamic> getJSON(HttpResponseMessage response)
+        // Método para obtener respuesta JSON de un HttpResponseMessage (asíncrono)
+        public async Task<dynamic> GetJSON(HttpResponseMessage response)
         {
             string responseBody = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<dynamic>(responseBody);
             return result ?? throw new JsonException("Deserialization returned null");
         }
-    }
+    } 
 }

@@ -19,6 +19,7 @@ namespace JpCommon
 
             try
             {
+#if WINDOWS
                 using Process process = new Process
                 {
                     StartInfo = new ProcessStartInfo
@@ -33,6 +34,10 @@ namespace JpCommon
                 process.Start();
                 process.WaitForExit();
                 return process.ExitCode == 0;
+#else
+                Console.WriteLine("Service management is only available on Windows.");
+                return false;
+#endif
             }
             catch (Exception ex)
             {
@@ -48,6 +53,7 @@ namespace JpCommon
 
             try
             {
+#if WINDOWS
                 using Process startProcess = new Process
                 {
                     StartInfo = new ProcessStartInfo
@@ -62,6 +68,10 @@ namespace JpCommon
                 startProcess.Start();
                 startProcess.WaitForExit();
                 return startProcess.ExitCode == 0;
+#else
+                Console.WriteLine("Service management is only available on Windows.");
+                return false;
+#endif
             }
             catch (Exception ex)
             {
@@ -77,6 +87,7 @@ namespace JpCommon
 
             try
             {
+#if WINDOWS
                 using Process process = new Process
                 {
                     StartInfo = new ProcessStartInfo
@@ -91,6 +102,10 @@ namespace JpCommon
                 process.Start();
                 process.WaitForExit();
                 return process.ExitCode == 0;
+#else
+                Console.WriteLine("Service management is only available on Windows.");
+                return false;
+#endif
             }
             catch (Exception ex)
             {
@@ -106,6 +121,7 @@ namespace JpCommon
 
             try
             {
+#if WINDOWS
                 using ServiceController serviceController = new ServiceController(serviceName);
                 if (serviceController.Status == ServiceControllerStatus.Running)
                 {
@@ -114,6 +130,10 @@ namespace JpCommon
                 }
 
                 return true;
+#else
+                Console.WriteLine("Service management is only available on Windows.");
+                return false;
+#endif
             }
             catch (Exception ex)
             {
@@ -129,9 +149,14 @@ namespace JpCommon
 
             try
             {
+#if WINDOWS
                 using ServiceController serviceController = new ServiceController(serviceName);
                 ServiceControllerStatus status = serviceController.Status;
                 return true;
+#else
+                Console.WriteLine("Service management is only available on Windows.");
+                return false;
+#endif
             }
             catch
             {
