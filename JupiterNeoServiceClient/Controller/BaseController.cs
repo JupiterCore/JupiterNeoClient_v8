@@ -20,7 +20,7 @@ namespace JupiterNeoServiceClient.Controllers
 
             try
             {
-                License = MetaModel.GetLicense();
+                License = MetaModel.getLicense();
             }
             catch (Exception ex)
             {
@@ -29,4 +29,3 @@ namespace JupiterNeoServiceClient.Controllers
         }
     }
 }
-

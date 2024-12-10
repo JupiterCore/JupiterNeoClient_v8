@@ -49,7 +49,7 @@ namespace JupiterNeoServiceClient.Models
                     this.SetDatabaseConnection(true);
                     if (connection == null || Db == null)
                     {
-                        Logger.Log(NULL, "connection or Db is null after SetDatabaseConnection in parameterized constructor.");
+                        Logger.Log(null, "connection or Db is null after SetDatabaseConnection in parameterized constructor.");
                     }
                 }
                 catch (Exception ex)

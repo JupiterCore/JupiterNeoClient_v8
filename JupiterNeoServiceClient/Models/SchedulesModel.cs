@@ -1,134 +1,154 @@
-﻿using JupiterNeoServiceClient.classes;
-using SqlKata.Execution;
+﻿using JpCommon;
+using JupiterNeoServiceClient.classes;
+using JupiterNeoServiceClient.Models;
+using JupiterNeoServiceClient.Utils;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
-namespace JupiterNeoServiceClient.Models
+namespace JupiterNeoServiceClient.Controllers
 {
-    public class SModel
+    public class SchedulesController : BaseController
     {
-        public string? BascId { get; set; }
-        public string? BascDate { get; set; }
-        public string? BascTime { get; set; }
-        public int BascStarted { get; set; }
-        public int BascCompleted { get; set; }
-        public int BascScanned { get; set; }
-    }
+        private readonly SchedulesModel _schedulesModel;
+        private readonly FileModel _fileModel;
+        private readonly BackupPathController _backupPathController;
 
-    public class SchedulesModel : BaseModel
-    {
-        public enum Fields
+        public string ScheduleId { get; private set; }
+        public DateTime LastTimeScanned { get; private set; } = DateTime.MinValue;
+        public bool WasSystemScanned { get; private set; }
+
+        // Constructor que recibe Api como dependencia inyectada.
+        public SchedulesController(
+            SchedulesModel schedulesModel,
+            FileModel fileModel,
+            BackupPathController backupPathController,
+            MetadataModel metaModel,
+            JpApi api // Aquí es donde se inyecta la API
+        ) : base(metaModel, api)
         {
-            ID,
-            DATE,
-            TIME,
-            STARTED,
-            COMPLETED
+            _schedulesModel = schedulesModel ?? throw new ArgumentNullException(nameof(schedulesModel));
+            _fileModel = fileModel ?? throw new ArgumentNullException(nameof(fileModel));
+            _backupPathController = backupPathController ?? throw new ArgumentNullException(nameof(backupPathController));
         }
 
-        public SchedulesModel()
+        public async Task VerifySchedulesAsync()
         {
-            TableName = "backup_schedule";
-            fields = new Dictionary<Enum, string>
+            if (!string.IsNullOrEmpty(License))
             {
-                [Fields.ID] = "basc_id",
-                [Fields.DATE] = "basc_date",
-                [Fields.TIME] = "basc_time",
-                [Fields.STARTED] = "basc_started",
-                [Fields.COMPLETED] = "basc_completed"
-            };
+                var result = await Api.GetSchedulesAsync(License);  // Llamada a la API para obtener los horarios
+                if (result?.Schedules != null)
+                {
+                    foreach (var schedule in result.Schedules)
+                    {
+                        if (_schedulesModel.GetSchedule(schedule) == null)
+                        {
+                            _schedulesModel.InsertSchedule(schedule);  // Insertar nuevo horario si no existe
+                        }
+                    }
+                }
+
+                if (result?.Paths != null)
+                {
+                    _backupPathController.UpdatePaths(result.Paths);  // Actualizar rutas de respaldo
+                }
+            }
         }
 
-        public void DeleteCompletedBackups()
+        public async Task<bool> ScanPathAsync(string path)
         {
-            string today = Helpers.Today();
-            query()
-                .Where(fields[Fields.DATE], "<>", today)
-                .WhereNotNull(fields[Fields.COMPLETED])
-                .Delete();
-        }
-
-        public SModel? GetSchedule(string time)
-        {
-            string today = Helpers.Today();
-            return query()
-                .Where(fields[Fields.DATE], today)
-                .Where(fields[Fields.TIME], time)
-                .Get<SModel>()
-                .FirstOrDefault();
-        }
-
-        public SModel? GetScheduleById(string scheduleId) =>
-            query()
-                .Where(fields[Fields.ID], scheduleId)
-                .Get<SModel>()
-                .FirstOrDefault();
-
-        public SModel? GetUncompletedBackup() =>
-            query()
-                .Where(fields[Fields.STARTED], 1)
-                .Where(fields[Fields.COMPLETED], 0)
-                .Get<SModel>()
-                .FirstOrDefault();
-
-        public SModel? GetUnstartedBackup()
-        {
-            string today = Helpers.Today();
-            return query()
-                .Where(fields[Fields.STARTED], 0)
-                .Where(fields[Fields.COMPLETED], 0)
-                .Where(fields[Fields.DATE], today)
-                .Get<SModel>()
-                .FirstOrDefault();
-        }
-
-        public IEnumerable<SModel> GetAllUnstartedBackups()
-        {
-            string today = Helpers.Today();
-            return query()
-                .Where(fields[Fields.STARTED], 0)
-                .Where(fields[Fields.COMPLETED], 0)
-                .Where(fields[Fields.DATE], today)
-                .Get<SModel>();
-        }
-
-        public void MarkScheduleAsStarted(SModel model)
-        {
-            model.BascStarted = 1;
-            query()
-                .Where(fields[Fields.ID], model.BascId)
-                .Update(model);
-        }
-
-        public void MarkScheduleAsCompleted(SModel model)
-        {
-            model.BascCompleted = 1;
-            query()
-                .Where(fields[Fields.ID], model.BascId)
-                .Update(model);
-        }
-
-        public int InsertSchedule(string time)
-        {
-            var model = new SModel
+            var extensions = await Api.GetExtensionsAsync(License);
+            if (extensions.Length == 0)
             {
-                BascDate = Helpers.Today(),
-                BascTime = time,
-                BascStarted = 0,
-                BascCompleted = 0,
-                BascScanned = 0
-            };
+                return false;
+            }
 
-            return insert(model);
+            if (!Directory.Exists(path))
+            {
+                Logger.Log($"Path does not exist: {path}", "SchedulesController");
+                return false;
+            }
+
+            try
+            {
+                var filesInDir = Helpers.DirSearch(path, extensions);
+                foreach (var file in filesInDir)
+                {
+                    if (!Directory.Exists(file))
+                    {
+                        var fileInfo = new FileInfo(file);
+                        if (fileInfo.Exists)
+                        {
+                            var fileInDb = _fileModel.FileByPath(file);
+                            var lastWrite = fileInfo.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss");
+
+                            if (fileInDb == null)
+                            {
+                                _fileModel.InsertFile(file, fileInfo.CreationTime.ToString("yyyy-MM-dd HH:mm:ss"), lastWrite);
+                            }
+                            else if (fileInDb.FileUpdatedAt != lastWrite)
+                            {
+                                _fileModel.OnFileModified(file, lastWrite);
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex, "Error scanning path in SchedulesController");
+                return false;
+            }
         }
 
-        public void MarkScheduleAsScanned(SModel schedule)
+        public bool ShouldBackup()
         {
-            schedule.BascScanned = 1;
-            query()
-                .Where(fields[Fields.ID], schedule.BascId)
-                .Update(schedule);
+            var uncompleted = _schedulesModel.GetUncompletedBackup();
+            if (uncompleted != null)
+            {
+                ScheduleId = uncompleted.BascId;
+                WasSystemScanned = uncompleted.BascScanned == 1;
+                return true;
+            }
+
+            var unstarted = _schedulesModel.GetAllUnstartedBackups();
+            foreach (var backup in unstarted)
+            {
+                if (Helpers.HasTimeElapsed(backup.BascTime))
+                {
+                    ScheduleId = backup.BascId;
+                    _schedulesModel.MarkScheduleAsStarted(backup);
+                    WasSystemScanned = backup.BascScanned == 1;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public void ConcludeCurrentBackup()
+        {
+            var uncompleted = _schedulesModel.GetUncompletedBackup();
+            if (uncompleted != null)
+            {
+                _schedulesModel.MarkScheduleAsCompleted(uncompleted);
+            }
+        }
+
+        public bool MarkScheduleAsScanned()
+        {
+            var schedule = _schedulesModel.GetSchedule(ScheduleId);
+            if (schedule == null)
+            {
+                Logger.Log($"Schedule not found: {ScheduleId}", "SchedulesController");
+                return false;
+            }
+            _schedulesModel.MarkScheduleAsScanned(schedule);
+            return true;
         }
     }
 }

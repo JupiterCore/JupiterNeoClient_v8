@@ -1,4 +1,6 @@
 ﻿using JupiterNeoServiceClient.Utils;
+using JupiterNeoServiceClient.Models;
+using JpCommon;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -23,8 +25,7 @@ namespace JupiterNeoServiceClient.Controllers
         {
             if (string.IsNullOrEmpty(License))
             {
-                Logger.Log("License is null or empty. Unable to notify programs.", "ProgramsController");
-                return false;
+                throw new InvalidOperationException("License is not set.");
             }
 
             try
@@ -33,7 +34,7 @@ namespace JupiterNeoServiceClient.Controllers
                 List<string> installedPrograms = _programListFetcher.GetInstalledProgramsList();
 
                 // Enviar la lista a través de la API
-                var response = await Api.NotifyInstalledPrograms(License, installedPrograms);
+                var response = await Api.NotifyInstalledProgramsAsync(License, installedPrograms);
                 response.EnsureSuccessStatusCode();
 
                 return true;

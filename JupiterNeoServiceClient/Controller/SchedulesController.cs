@@ -1,152 +1,152 @@
-﻿using JupiterNeoServiceClient.Classes;
+﻿using JpCommon;
+using JupiterNeoServiceClient.classes;
+using JupiterNeoServiceClient.Controllers;
 using JupiterNeoServiceClient.Models;
 using JupiterNeoServiceClient.Utils;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace JupiterNeoServiceClient.Controllers
+namespace JupiterNeoServiceClient.Controller
 {
     public class SchedulesController : BaseController
     {
-        private readonly SchedulesModel _schedulesModel;
-        private readonly FileModel _fileModel;
-        private readonly BackupPathController _backupPathController;
+        public SchedulesModel sm = new();
+        public FileModel fileModel = new();
+        public string scheduleId { get; set; }
+        public DateTime lastTimeScanned { get; set; } = DateTime.MinValue;
+        public bool WasSystemScanned { get; set; }
 
-        public string ScheduleId { get; private set; }
-        public DateTime LastTimeScanned { get; private set; } = DateTime.MinValue;
-        public bool WasSystemScanned { get; private set; }
-
-        // Constructor que recibe Api como dependencia inyectada.
-        public SchedulesController(
-            SchedulesModel schedulesModel,
-            FileModel fileModel,
-            BackupPathController backupPathController,
-            MetadataModel metaModel,
-            JpApi api
-        ) : base(metaModel, api)
+        // Constructor ajustado para recibir y pasar parámetros a BaseController
+        public SchedulesController(MetadataModel metaModel, JpApi api)
+            : base(metaModel, api)
         {
-            _schedulesModel = schedulesModel ?? throw new ArgumentNullException(nameof(schedulesModel));
-            _fileModel = fileModel ?? throw new ArgumentNullException(nameof(fileModel));
-            _backupPathController = backupPathController ?? throw new ArgumentNullException(nameof(backupPathController));
+            sm = new SchedulesModel();
+            fileModel = new FileModel();
         }
 
-        public async Task VerifySchedulesAsync()
+        public async Task VerifySchedules()
         {
             if (!string.IsNullOrEmpty(License))
             {
                 var result = await Api.GetSchedulesAsync(License);
-                if (result?.Schedules != null)
+                if (result?.schedules != null)
                 {
-                    foreach (var schedule in result.Schedules)
+                    foreach (var schedule in result.schedules)
                     {
-                        if (_schedulesModel.GetSchedule(schedule) == null)
+                        var sc = sm.GetSchedule(schedule);
+                        if (sc == null)
                         {
-                            _schedulesModel.InsertSchedule(schedule);
+                            sm.InsertSchedule(schedule);
                         }
                     }
                 }
-
-                if (result?.Paths != null)
+                if (result?.paths != null)
                 {
-                    _backupPathController.UpdatePaths(result.Paths);
+                    BackupPathController backupPathCtrl = new();
+                    backupPathCtrl.UpdatePaths(result.paths);
                 }
             }
         }
 
-        public async Task<bool> ScanPathAsync(string path)
+        public async Task<bool> ScanPath(string path)
         {
-            var extensions = await Api.GetExtensionsAsync(License);
+            string[] extensions = await Api.GetExtensions(License);
             if (extensions.Length == 0)
             {
                 return false;
             }
 
-            if (!Directory.Exists(path))
-            {
-                Logger.Log($"Path does not exist: {path}", "SchedulesController");
-                return false;
-            }
-
+            bool returnValue = true;
             try
             {
-                var filesInDir = Helpers.DirSearch(path, extensions);
-                foreach (var file in filesInDir)
+                if (Directory.Exists(path))
                 {
-                    if (!Directory.Exists(file))
+                    List<string> filesInDir = Helpers.DirSearch(path, extensions);
+                    foreach (var file in filesInDir)
                     {
-                        var fileInfo = new FileInfo(file);
-                        if (fileInfo.Exists)
+                        if (!Directory.Exists(file)) // No es un directorio
                         {
-                            var fileInDb = _fileModel.FileByPath(file);
-                            var lastWrite = fileInfo.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss");
-
-                            if (fileInDb == null)
+                            FileInfo fileInfo = new(file);
+                            if (fileInfo.Exists) // El archivo existe en el sistema
                             {
-                                _fileModel.InsertFile(file, fileInfo.CreationTime.ToString("yyyy-MM-dd HH:mm:ss"), lastWrite);
-                            }
-                            else if (fileInDb.FileUpdatedAt != lastWrite)
-                            {
-                                _fileModel.OnFileModified(file, lastWrite);
+                                var fileInDb = fileModel.FileByPath(file);
+                                string lastWrite = fileInfo.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss");
+                                if (fileInDb == null)
+                                {
+                                    fileModel.InsertFile(file, fileInfo.CreationTime.ToString("yyyy-MM-dd HH:mm:ss"), lastWrite);
+                                }
+                                else if (fileInDb.file_updated_at != lastWrite) // El archivo ha cambiado
+                                {
+                                    fileModel.OnFileModified(file, lastWrite);
+                                }
                             }
                         }
                     }
                 }
-                return true;
             }
             catch (Exception ex)
             {
-                Logger.Log(ex, "Error scanning path in SchedulesController");
-                return false;
+                Logger.Log(ex, "---P50B3000--");
+                returnValue = false;
             }
+            return returnValue;
         }
 
         public bool ShouldBackup()
         {
-            var uncompleted = _schedulesModel.GetUncompletedBackup();
+            bool returnValue = false;
+
+            var uncompleted = sm.GetUncompletedBackup();
+
             if (uncompleted != null)
             {
-                ScheduleId = uncompleted.BascId;
-                WasSystemScanned = uncompleted.BascScanned == 1;
-                return true;
+                scheduleId = uncompleted.basc_id;
+                WasSystemScanned = uncompleted.basc_scanned == 1;
+                returnValue = true;
             }
-
-            var unstarted = _schedulesModel.GetAllUnstartedBackups();
-            foreach (var backup in unstarted)
+            else
             {
-                if (Helpers.HasTimeElapsed(backup.BascTime))
+                var unstarted = sm.GetAllUnstartedBackups();
+                if (unstarted.Any())
                 {
-                    ScheduleId = backup.BascId;
-                    _schedulesModel.MarkScheduleAsStarted(backup);
-                    WasSystemScanned = backup.BascScanned == 1;
-                    return true;
+                    foreach (var b in unstarted)
+                    {
+                        if (Helpers.HasTimeElapsed(b.basc_time))
+                        {
+                            scheduleId = b.basc_id;
+                            sm.MarkScheduleAsStarted(b);
+                            WasSystemScanned = b.basc_scanned == 1;
+                            returnValue = true;
+                            break;
+                        }
+                    }
                 }
             }
 
-            return false;
+            return returnValue;
         }
 
         public void ConcludeCurrentBackup()
         {
-            var uncompleted = _schedulesModel.GetUncompletedBackup();
+            var uncompleted = sm.GetUncompletedBackup();
             if (uncompleted != null)
             {
-                _schedulesModel.MarkScheduleAsCompleted(uncompleted);
+                sm.MarkScheduleAsCompleted(uncompleted);
             }
         }
 
         public bool MarkScheduleAsScanned()
         {
-            var schedule = _schedulesModel.GetSchedule(ScheduleId);
+            var schedule = sm.GetSchedule(scheduleId);
             if (schedule == null)
             {
-                Logger.Log($"Schedule not found: {ScheduleId}", "SchedulesController");
                 return false;
             }
-            _schedulesModel.MarkScheduleAsScanned(schedule);
+            sm.MarkScheduleAsScanned(schedule);
             return true;
         }
     }
