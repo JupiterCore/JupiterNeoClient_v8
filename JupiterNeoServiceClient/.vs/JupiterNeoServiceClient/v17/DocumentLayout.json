@@ -3,36 +3,38 @@
   "WorkspaceRootPath": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{DA00B33B-251A-4493-8D00-5A423C559C8B}|..\\JpCommon\\JpCommon.csproj|c:\\users\\gaby\\desktop\\jupiterneoclient_v8\\jpcommon\\jpcommon.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{BEA03F2C-9C89-4849-BAB4-785948FEDC8E}|JupiterNeoServiceClient.csproj|c:\\users\\gaby\\desktop\\jupiterneoclient_v8\\jupiterneoserviceclient\\controller\\schedulescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BEA03F2C-9C89-4849-BAB4-785948FEDC8E}|JupiterNeoServiceClient.csproj|solutionrelative:controller\\schedulescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BEA03F2C-9C89-4849-BAB4-785948FEDC8E}|JupiterNeoServiceClient.csproj|c:\\users\\gaby\\desktop\\jupiterneoclient_v8\\jupiterneoserviceclient\\models\\schedulesmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BEA03F2C-9C89-4849-BAB4-785948FEDC8E}|JupiterNeoServiceClient.csproj|solutionrelative:models\\schedulesmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BEA03F2C-9C89-4849-BAB4-785948FEDC8E}|JupiterNeoServiceClient.csproj|c:\\users\\gaby\\desktop\\jupiterneoclient_v8\\jupiterneoserviceclient\\controller\\metadatacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BEA03F2C-9C89-4849-BAB4-785948FEDC8E}|JupiterNeoServiceClient.csproj|solutionrelative:controller\\metadatacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{BEA03F2C-9C89-4849-BAB4-785948FEDC8E}|JupiterNeoServiceClient.csproj|c:\\users\\gaby\\desktop\\jupiterneoclient_v8\\jupiterneoserviceclient\\controller\\filecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BEA03F2C-9C89-4849-BAB4-785948FEDC8E}|JupiterNeoServiceClient.csproj|solutionrelative:controller\\filecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{BEA03F2C-9C89-4849-BAB4-785948FEDC8E}|JupiterNeoServiceClient.csproj|c:\\users\\gaby\\desktop\\jupiterneoclient_v8\\jupiterneoserviceclient\\utils\\helpers.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BEA03F2C-9C89-4849-BAB4-785948FEDC8E}|JupiterNeoServiceClient.csproj|solutionrelative:utils\\helpers.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{BEA03F2C-9C89-4849-BAB4-785948FEDC8E}|JupiterNeoServiceClient.csproj|c:\\users\\gaby\\desktop\\jupiterneoclient_v8\\jupiterneoserviceclient\\models\\filemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BEA03F2C-9C89-4849-BAB4-785948FEDC8E}|JupiterNeoServiceClient.csproj|solutionrelative:models\\filemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BEA03F2C-9C89-4849-BAB4-785948FEDC8E}|JupiterNeoServiceClient.csproj|c:\\users\\gaby\\desktop\\jupiterneoclient_v8\\jupiterneoserviceclient\\models\\basemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BEA03F2C-9C89-4849-BAB4-785948FEDC8E}|JupiterNeoServiceClient.csproj|solutionrelative:models\\basemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BEA03F2C-9C89-4849-BAB4-785948FEDC8E}|JupiterNeoServiceClient.csproj|c:\\users\\gaby\\desktop\\jupiterneoclient_v8\\jupiterneoserviceclient\\models\\backuppathmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BEA03F2C-9C89-4849-BAB4-785948FEDC8E}|JupiterNeoServiceClient.csproj|solutionrelative:models\\backuppathmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BEA03F2C-9C89-4849-BAB4-785948FEDC8E}|JupiterNeoServiceClient.csproj|c:\\users\\gaby\\desktop\\jupiterneoclient_v8\\jupiterneoserviceclient\\controller\\basecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BEA03F2C-9C89-4849-BAB4-785948FEDC8E}|JupiterNeoServiceClient.csproj|solutionrelative:controller\\basecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{BEA03F2C-9C89-4849-BAB4-785948FEDC8E}|JupiterNeoServiceClient.csproj|c:\\users\\gaby\\desktop\\jupiterneoclient_v8\\jupiterneoserviceclient\\controller\\backuppathcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BEA03F2C-9C89-4849-BAB4-785948FEDC8E}|JupiterNeoServiceClient.csproj|solutionrelative:controller\\backuppathcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BEA03F2C-9C89-4849-BAB4-785948FEDC8E}|JupiterNeoServiceClient.csproj|c:\\users\\gaby\\desktop\\jupiterneoclient_v8\\jupiterneoserviceclient\\models\\metadatamodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BEA03F2C-9C89-4849-BAB4-785948FEDC8E}|JupiterNeoServiceClient.csproj|solutionrelative:models\\metadatamodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BEA03F2C-9C89-4849-BAB4-785948FEDC8E}|JupiterNeoServiceClient.csproj|c:\\users\\gaby\\desktop\\jupiterneoclient_v8\\jupiterneoserviceclient\\utils\\api.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BEA03F2C-9C89-4849-BAB4-785948FEDC8E}|JupiterNeoServiceClient.csproj|solutionrelative:utils\\api.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DA00B33B-251A-4493-8D00-5A423C559C8B}|..\\JpCommon\\JpCommon.csproj|c:\\users\\gaby\\desktop\\jupiterneoclient_v8\\jpcommon\\jpapi.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -42,99 +44,123 @@
       "DocumentGroups": [
         {
           "DockedWidth": 245,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "BaseController.cs",
-              "DocumentMoniker": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\Controller\\BaseController.cs",
-              "RelativeDocumentMoniker": "Controller\\BaseController.cs",
-              "ToolTip": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\Controller\\BaseController.cs",
-              "RelativeToolTip": "Controller\\BaseController.cs",
-              "ViewState": "AQIAAAYAAAAAAAAAAAAAABYAAAAxAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-06T15:41:05.032Z",
-              "IsPinned": true,
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "MetadataModel.cs",
-              "DocumentMoniker": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\Models\\MetadataModel.cs",
-              "RelativeDocumentMoniker": "Models\\MetadataModel.cs",
-              "ToolTip": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\Models\\MetadataModel.cs",
-              "RelativeToolTip": "Models\\MetadataModel.cs",
-              "ViewState": "AQIAAH8AAAAAAAAAAAAQwJsAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-09T23:49:08.1Z",
-              "IsPinned": true,
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "FileModel.cs",
-              "DocumentMoniker": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\Models\\FileModel.cs",
-              "RelativeDocumentMoniker": "Models\\FileModel.cs",
-              "ToolTip": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\Models\\FileModel.cs",
-              "RelativeToolTip": "Models\\FileModel.cs",
-              "ViewState": "AQIAAAgAAAAAAAAAAAA1wBgAAAARAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-10T00:03:15.603Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "SchedulesController.cs",
-              "DocumentMoniker": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\Controller\\SchedulesController.cs",
-              "RelativeDocumentMoniker": "Controller\\SchedulesController.cs",
-              "ToolTip": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\Controller\\SchedulesController.cs",
-              "RelativeToolTip": "Controller\\SchedulesController.cs",
-              "ViewState": "AQIAAAcAAAAAAAAAAAAMwBEAAAArAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-10T00:02:23.502Z",
+              "Title": "JpCommon",
+              "DocumentMoniker": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JpCommon\\JpCommon.csproj",
+              "RelativeDocumentMoniker": "..\\JpCommon\\JpCommon.csproj",
+              "ToolTip": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JpCommon\\JpCommon.csproj",
+              "RelativeToolTip": "..\\JpCommon\\JpCommon.csproj",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-12-17T05:00:55.176Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "SchedulesModel.cs",
-              "DocumentMoniker": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\Models\\SchedulesModel.cs",
-              "RelativeDocumentMoniker": "Models\\SchedulesModel.cs",
-              "ToolTip": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\Models\\SchedulesModel.cs",
-              "RelativeToolTip": "Models\\SchedulesModel.cs",
-              "ViewState": "AQIAAIgAAAAAAAAAAAAmwJoAAAAAAAAA",
+              "Title": "SchedulesController.cs",
+              "DocumentMoniker": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\Controller\\SchedulesController.cs",
+              "RelativeDocumentMoniker": "Controller\\SchedulesController.cs",
+              "ToolTip": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\Controller\\SchedulesController.cs",
+              "RelativeToolTip": "Controller\\SchedulesController.cs",
+              "ViewState": "AQIAACMAAAAAAAAAAAAMwHIAAAA1AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-10T00:01:00.417Z",
+              "WhenOpened": "2024-12-17T05:00:47.007Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "MetaDataController.cs",
+              "DocumentMoniker": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\Controller\\MetaDataController.cs",
+              "RelativeDocumentMoniker": "Controller\\MetaDataController.cs",
+              "ToolTip": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\Controller\\MetaDataController.cs",
+              "RelativeToolTip": "Controller\\MetaDataController.cs",
+              "ViewState": "AQIAACQAAAAAAAAAAAAnwC0AAAAuAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-17T05:00:42.034Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "FileController.cs",
               "DocumentMoniker": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\Controller\\FileController.cs",
               "RelativeDocumentMoniker": "Controller\\FileController.cs",
               "ToolTip": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\Controller\\FileController.cs",
               "RelativeToolTip": "Controller\\FileController.cs",
-              "ViewState": "AQIAAEMAAAAAAAAAAADgv08AAAAjAAAA",
+              "ViewState": "AQIAAEYAAAAAAAAAAAAnwE8AAAAjAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-10T00:01:04.63Z",
+              "WhenOpened": "2024-12-17T05:00:25.265Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "BaseModel.cs",
-              "DocumentMoniker": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\Models\\BaseModel.cs",
-              "RelativeDocumentMoniker": "Models\\BaseModel.cs",
-              "ToolTip": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\Models\\BaseModel.cs",
-              "RelativeToolTip": "Models\\BaseModel.cs",
-              "ViewState": "AQIAACQAAAAAAAAAAAAQwDYAAAAkAAAA",
+              "Title": "Helpers.cs",
+              "DocumentMoniker": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\Utils\\Helpers.cs",
+              "RelativeDocumentMoniker": "Utils\\Helpers.cs",
+              "ToolTip": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\Utils\\Helpers.cs",
+              "RelativeToolTip": "Utils\\Helpers.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAeAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-09T23:49:48.478Z",
+              "WhenOpened": "2024-12-17T04:59:07.354Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "FileModel.cs",
+              "DocumentMoniker": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\Models\\FileModel.cs",
+              "RelativeDocumentMoniker": "Models\\FileModel.cs",
+              "ToolTip": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\Models\\FileModel.cs",
+              "RelativeToolTip": "Models\\FileModel.cs",
+              "ViewState": "AQIAADUAAAAAAAAAAAAmwEsAAAAxAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-17T04:35:41.013Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "BackupPathModel.cs",
+              "DocumentMoniker": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\Models\\BackupPathModel.cs",
+              "RelativeDocumentMoniker": "Models\\BackupPathModel.cs",
+              "ToolTip": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\Models\\BackupPathModel.cs",
+              "RelativeToolTip": "Models\\BackupPathModel.cs",
+              "ViewState": "AQIAADUAAAAAAAAAAAAswEIAAAAVAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-17T04:21:39.669Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "JpApi.cs",
+              "DocumentMoniker": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JpCommon\\JpApi.cs",
+              "RelativeDocumentMoniker": "..\\JpCommon\\JpApi.cs",
+              "ToolTip": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JpCommon\\JpApi.cs",
+              "RelativeToolTip": "..\\JpCommon\\JpApi.cs",
+              "ViewState": "AQIAAC0AAAAAAAAAAAAmwDcAAAA2AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-16T23:26:07.563Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "BackupPathController.cs",
+              "DocumentMoniker": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\Controller\\BackupPathController.cs",
+              "RelativeDocumentMoniker": "Controller\\BackupPathController.cs",
+              "ToolTip": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\Controller\\BackupPathController.cs",
+              "RelativeToolTip": "Controller\\BackupPathController.cs",
+              "ViewState": "AQIAABAAAAAAAAAAAAAewCcAAAAlAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-16T23:01:41.468Z",
               "EditorCaption": ""
             },
             {
@@ -147,24 +173,11 @@
             },
             {
               "$type": "Bookmark",
-              "Name": "ST:0:0:{57d563b6-44a5-47df-85be-f4199ad6b651}"
-            },
-            {
-              "$type": "Bookmark",
               "Name": "ST:5:0:{57d563b6-44a5-47df-85be-f4199ad6b651}"
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "Api.cs",
-              "DocumentMoniker": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\Utils\\Api.cs",
-              "RelativeDocumentMoniker": "Utils\\Api.cs",
-              "ToolTip": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JupiterNeoServiceClient\\Utils\\Api.cs",
-              "RelativeToolTip": "Utils\\Api.cs",
-              "ViewState": "AQIAAAwAAAAAAAAAAAAxwBkAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-06T23:02:17.805Z",
-              "EditorCaption": ""
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{004be353-6879-467c-9d1e-9ac23cdf6d49}"
             }
           ]
         }

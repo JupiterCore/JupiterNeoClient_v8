@@ -54,24 +54,24 @@ namespace JupiterNeoServiceClient.Models
                        .FirstOrDefault();
         }
 
-        public bool existsPath(string path)
+        public bool ExistsPath(string path)
         {
             return this.byPath(path) != null;
         }
 
-        public List<FullModel> getAllPaths()
+        public List<FullModel> GetAllPaths()
         {
             return this.query().Get<FullModel>().ToList();
         }
 
-        public void deleteByPath(string path)
+        public void DeleteByPath(string path)
         {
             this.query()
                 .Where(fields[fd.PATH], path)
                 .Delete();
         }
 
-        public void addPath(string path)
+        public void AddPath(string path)
         {
             var insertData = new FullModel(path);
             this.query().Insert(insertData);

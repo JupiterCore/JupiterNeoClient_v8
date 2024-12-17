@@ -8,7 +8,7 @@ namespace JupiterNeoServiceClient.classes
 {
     public static class Helpers
     {
-        public static string today()
+        public static string Today()
         {
             return DateTime.Now.ToString("yyyy-MM-dd");
         }

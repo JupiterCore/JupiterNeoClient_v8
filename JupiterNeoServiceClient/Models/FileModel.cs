@@ -3,10 +3,11 @@ using SqlKata.Execution;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static JupiterNeoServiceClient.Models.MetadataModel;
 
 namespace JupiterNeoServiceClient.Models
 {
-    public class FileModel
+    public class FModelNoId
     {
         public string? FilePath { get; set; }
         public string? FileAddedAt { get; set; }
@@ -17,7 +18,7 @@ namespace JupiterNeoServiceClient.Models
         public int FileFailedAttempts { get; set; }
     }
 
-    public class FModel : FileModel
+    public class FModel : FModelNoId
     {
         public int FileId { get; set; }
     }
@@ -61,7 +62,7 @@ namespace JupiterNeoServiceClient.Models
 
         public bool InsertFile(string filePath, string createdAt, string updatedAt)
         {
-            var model = new FileModel
+            var model = new FModelNoId
             {
                 FilePath = filePath,
                 FileAddedAt = Helpers.Today(),

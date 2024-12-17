@@ -11,13 +11,12 @@
 using System;
 using System.Reflection;
 
-[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("dotnet-JupiterNeoServiceClient-c5f76afc-c95b-4789-8c49-a55332b56542")]
-[assembly: System.Reflection.AssemblyCompanyAttribute("JupiterNeoServiceClient")]
-[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("JpCommon")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cda249ab78f99241acc801f27f0eecdce2235884")]
-[assembly: System.Reflection.AssemblyProductAttribute("JupiterNeoServiceClient")]
-[assembly: System.Reflection.AssemblyTitleAttribute("JupiterNeoServiceClient")]
+[assembly: System.Reflection.AssemblyProductAttribute("JpCommon")]
+[assembly: System.Reflection.AssemblyTitleAttribute("JpCommon")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 
 // Generado por la clase WriteCodeFragment de MSBuild.

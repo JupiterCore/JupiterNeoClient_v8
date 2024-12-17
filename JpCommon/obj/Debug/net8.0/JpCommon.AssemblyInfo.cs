@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("JpCommon")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+201d7eb5fb38a26be620e34e9ba4bd864a42f5a7")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cda249ab78f99241acc801f27f0eecdce2235884")]
 [assembly: System.Reflection.AssemblyProductAttribute("JpCommon")]
 [assembly: System.Reflection.AssemblyTitleAttribute("JpCommon")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

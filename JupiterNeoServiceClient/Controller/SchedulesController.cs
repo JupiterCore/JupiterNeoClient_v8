@@ -1,14 +1,10 @@
 ﻿using JpCommon;
 using JupiterNeoServiceClient.classes;
 using JupiterNeoServiceClient.Controllers;
+using JupiterNeoServiceClient.Controllers.JupiterNeoServiceClient.Models;
 using JupiterNeoServiceClient.Models;
 using JupiterNeoServiceClient.Utils;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace JupiterNeoServiceClient.Controller
 {
@@ -33,9 +29,9 @@ namespace JupiterNeoServiceClient.Controller
             if (!string.IsNullOrEmpty(License))
             {
                 var result = await Api.GetSchedulesAsync(License);
-                if (result?.schedules != null)
+                if (result?.Schedules != null)
                 {
-                    foreach (var schedule in result.schedules)
+                    foreach (var schedule in result.Schedules)
                     {
                         var sc = sm.GetSchedule(schedule);
                         if (sc == null)
@@ -44,17 +40,18 @@ namespace JupiterNeoServiceClient.Controller
                         }
                     }
                 }
-                if (result?.paths != null)
+                if (result?.Paths != null)
                 {
-                    BackupPathController backupPathCtrl = new();
-                    backupPathCtrl.UpdatePaths(result.paths);
+                    BackupPathModel backupPathModel = new BackupPathModel();
+                    BackupPathController backupPathCtrl = new BackupPathController(backupPathModel);
+                    backupPathCtrl.UpdatePaths(result.Paths);
                 }
             }
         }
 
         public async Task<bool> ScanPath(string path)
         {
-            string[] extensions = await Api.GetExtensions(License);
+            string[] extensions = await Api.GetExtensionsAsync(License);
             if (extensions.Length == 0)
             {
                 return false;
