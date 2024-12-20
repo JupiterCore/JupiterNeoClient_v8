@@ -1,7 +1,7 @@
-﻿using JupiterNeoServiceClient.Controllers;
+﻿using JpCommon;
+using JupiterNeoServiceClient.Controllers;
 using JupiterNeoServiceClient.Models;
 using JupiterNeoServiceClient.Utils;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
@@ -9,14 +9,12 @@ namespace JupiterNeoServiceClient.Controller
 {
     public class MetaDataController : BaseController
     {
-        private readonly Api _api;
         private readonly MetadataModel _model;
 
         public string BackupId { get; private set; }
 
-        public MetaDataController(Api api, MetadataModel model)
+        public MetaDataController(MetadataModel model, JpApi api) : base(model, api)  
         {
-            _api = api;
             _model = model;
         }
 
@@ -41,9 +39,9 @@ namespace JupiterNeoServiceClient.Controller
         {
             try
             {
-                if (!string.IsNullOrEmpty(this.license) && BackupId == null)
+                if (!string.IsNullOrEmpty(this.License) && BackupId == null)
                 {
-                    var backupId = await _api.getBackupId(this.license, pendingFilesCount);
+                    var backupId = await Api.GetBackupIdAsync(this.License, pendingFilesCount);
 
                     if (!string.IsNullOrEmpty(backupId))
                     {
@@ -59,11 +57,18 @@ namespace JupiterNeoServiceClient.Controller
             }
         }
 
-        public async Task ConcludeBackup(string bid)
+        public async Task ConcludeBackupAsync(string bid)
         {
-            var response = await _api.concludeBackup(this.license, bid);
-            response.EnsureSuccessStatusCode();
-            _model.deleteBackup();
+            try
+            {
+                var response = await Api.ConcludeBackupAsync(this.License, bid);
+                response.EnsureSuccessStatusCode();
+                _model.deleteBackup();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex, "--conclude-backup--");
+            }
         }
     }
 }

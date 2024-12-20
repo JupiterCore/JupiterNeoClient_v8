@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("JupiterNeoServiceClient")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cda249ab78f99241acc801f27f0eecdce2235884")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+14b2979e2959460b84fc071e6a36754735877b9b")]
 [assembly: System.Reflection.AssemblyProductAttribute("JupiterNeoServiceClient")]
 [assembly: System.Reflection.AssemblyTitleAttribute("JupiterNeoServiceClient")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

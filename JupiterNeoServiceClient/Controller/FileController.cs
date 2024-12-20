@@ -77,7 +77,7 @@ namespace JupiterNeoServiceClient.Controllers
                     var deletedFolder = GetDeletedFolder(file.FilePath);
                     if (deletedFolder != null)
                     {
-                        _fileModel.DeleteStartsWithPathAndHastBackedUp(deletedFolder);
+                        _fileModel.DeleteStartsWithPathAndHasBackedUp(deletedFolder);
                     }
                     return;
                 }
