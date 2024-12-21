@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JupiterNeoServiceClient", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JpCommon", "..\JpCommon\JpCommon.csproj", "{DA00B33B-251A-4493-8D00-5A423C559C8B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Installer", "..\Intaller\Installer.csproj", "{713D6A0C-ABA5-4239-BE64-DAB683A26C29}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{DA00B33B-251A-4493-8D00-5A423C559C8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA00B33B-251A-4493-8D00-5A423C559C8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA00B33B-251A-4493-8D00-5A423C559C8B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{713D6A0C-ABA5-4239-BE64-DAB683A26C29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{713D6A0C-ABA5-4239-BE64-DAB683A26C29}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{713D6A0C-ABA5-4239-BE64-DAB683A26C29}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{713D6A0C-ABA5-4239-BE64-DAB683A26C29}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

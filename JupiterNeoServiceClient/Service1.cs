@@ -1,21 +1,13 @@
 ﻿using JpCommon;
-using JupiterNeoServiceClient.classes;
 using JupiterNeoServiceClient.Controller;
 using JupiterNeoServiceClient.Controllers;
 using JupiterNeoServiceClient.Models;
 using JupiterNeoServiceClient.Utils;
-using Microsoft.Data.Sqlite;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.SQLite;
 using System.Diagnostics;
-using System.Linq;
-using System.Net.Http;
-using System.Runtime.Versioning;
 using System.ServiceProcess;
 using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 
 namespace JupiterNeoServiceClient
@@ -289,7 +281,7 @@ namespace JupiterNeoServiceClient
             {
                 var api = new JpApi();
                 var controller = new FileController();
-                var result = await api.notifyPathsAvailable(controller.License);
+                var result = await api.notifyPathsAvailable(controller.license);
                 result.EnsureSuccessStatusCode();
                 didItNotifyCorrecty = true;
             }

@@ -10,13 +10,14 @@ using System.Threading.Tasks;
 
 namespace JupiterNeoServiceClient.Controller
 {
+
     public class SchedulesController : BaseController
     {
 
         public SchedulesModel sm = new SchedulesModel();
 
         public FileModel fileModel = new FileModel();
-        public string scheduleId { get; set; }
+        public string? scheduleId { get; set; }
 
         public DateTime lastTimeScanned { get; set; }
 
@@ -31,9 +32,9 @@ namespace JupiterNeoServiceClient.Controller
 
         public async Task verifySchedules()
         {
-            if (this.License != null && this.License.Length > 0)
+            if (this.license != null && this.license.Length > 0)
             {
-                var result = await Api.getSchedulesAsync(this.license);
+                var result = await api.getSchedulesAsync(this.license);
                 if (result.schedules != null)
                 {
                     foreach (var schedule in result.schedules)
@@ -167,4 +168,5 @@ namespace JupiterNeoServiceClient.Controller
             return true;
         }
     }
+
 }

@@ -181,7 +181,7 @@ namespace JpCommon
             return await this.post("/computer/client-version/", data);
         }
 
-        public async Task<HttpResponseMessage> notifyPathsAvailable(string license)
+        public async Task<HttpResponseMessage> notifyPathsAvailable(string? license)
         {
             object data = new
             {

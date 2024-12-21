@@ -11,3 +11,5 @@ C:\Users\GABY\Desktop\JupiterNeoClient_v8\JpCommon\obj\Debug\net8.0\JpCommon.dll
 C:\Users\GABY\Desktop\JupiterNeoClient_v8\JpCommon\obj\Debug\net8.0\refint\JpCommon.dll
 C:\Users\GABY\Desktop\JupiterNeoClient_v8\JpCommon\obj\Debug\net8.0\JpCommon.pdb
 C:\Users\GABY\Desktop\JupiterNeoClient_v8\JpCommon\obj\Debug\net8.0\ref\JpCommon.dll
+C:\Users\GABY\Desktop\JupiterNeoClient_v8\JpCommon\bin\Debug\net8.0\JpCommon.runtimeconfig.json
+C:\Users\GABY\Desktop\JupiterNeoClient_v8\JpCommon\obj\Debug\net8.0\JpCommon.genruntimeconfig.cache

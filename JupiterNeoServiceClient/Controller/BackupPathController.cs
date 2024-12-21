@@ -7,40 +7,53 @@ namespace JupiterNeoServiceClient.Controllers
 {
     public class BackupPathController
     {
-        private readonly BackupPathModel _backupPathModel;
-
-        // Constructor con inyección de dependencias
-        public BackupPathController(BackupPathModel backupPathModel)
+        private BackupPathModel backupPathModel { get; set; }
+        public BackupPathController()
         {
-            _backupPathModel = backupPathModel ?? throw new ArgumentNullException(nameof(backupPathModel));
+            this.backupPathModel = new BackupPathModel();
         }
 
-        public void UpdatePaths(string[] newPaths)
+        public void updatePaths(string[] newPaths)
         {
-            if (newPaths == null || newPaths.Length == 0)
-                throw new ArgumentException("No paths provided for update.");
 
-            var currentPaths = _backupPathModel.GetAllPaths();
-            List<string> currentPathsList = currentPaths.Select(p => p.bapa_path).ToList();
+            var currentPaths = this.backupPathModel.getAllPaths();
+            List<string> currentPathsList = new List<string>();
+            foreach (var path in currentPaths)
+            {
+                if (path.bapa_path != null)
+                {
+                    currentPathsList.Add(path.bapa_path);
+                }
+            }
 
-            // Agregar nuevas rutas que no existen localmente
+            /*
+            * New paths are all the paths that the online system has set.
+            * the current paths are any paths that were previously set in the local db (could be outdated)
+            */
             foreach (string path in newPaths)
             {
-                if (!_backupPathModel.ExistsPath(path))
+                // If the path in the remote db is not present in the local db we must add it locally.
+                bool existsLocally = this.backupPathModel.existsPath(path);
+                if (!existsLocally)
                 {
-                    _backupPathModel.AddPath(path);
+                    this.backupPathModel.addPath(path);
                 }
             }
 
-            // Eliminar rutas locales que ya no están en las nuevas rutas
+            /**
+             * The user could have removed from paths remotely but locally a previous version could have added them.
+             * We need to remove old records that no longer exist.
+             **/
             foreach (string path in currentPathsList)
             {
+                // the new paths does not contain this current path
                 if (!newPaths.Contains(path))
                 {
-                    _backupPathModel.DeleteByPath(path);
+                    this.backupPathModel.deleteByPath(path);
                 }
             }
         }
+
     }
 }
 

@@ -20,8 +20,8 @@
             base.Dispose(disposing);
         }
 
-        private System.ServiceProcess.ServiceProcessInstaller serviceProcessInstaller1;
-        private System.ServiceProcess.ServiceInstaller serviceInstaller1;
+        //private System.ServiceProcess.ServiceProcessInstaller serviceProcessInstaller1;
+        //private System.ServiceProcess.ServiceInstaller serviceInstaller1;
         #region Código generado por el Diseñador de componentes
 
         /// <summary> 

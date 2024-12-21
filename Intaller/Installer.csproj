@@ -16,4 +16,13 @@
     <None Include="Resources\Form1.resx" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="SqlKata" Version="2.4.0" />
+    <PackageReference Include="SqlKata.Execution" Version="2.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JpCommon\JpCommon.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -17,7 +17,7 @@ namespace JupiterNeoServiceClient.Utils
             logFilePath = Path.Combine(appDirectory, logFileName);
         }
 
-        public static void Log(Exception ex, string level)
+        public static void Log(Exception? ex, string level)
         {
             if (ex != null)
             {
