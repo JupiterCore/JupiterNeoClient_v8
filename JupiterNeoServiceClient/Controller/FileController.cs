@@ -7,140 +7,170 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using JpCommon;
-using JpCommon;
 
 
 namespace JupiterNeoServiceClient.Controllers
 {
+
     public class FileController : BaseController
     {
-        private readonly FileModel _fileModel;
-        private readonly FileProcessor _fileProcessor;
-
-        public FileController(
-            FileModel fileModel,
-            FileProcessor fileProcessor,
-            MetadataModel metaModel,
-            JpApi api
-        ) : base(metaModel, api)
+        public FileModel model = new FileModel();
+        public FileProcessor fileProcessor = new FileProcessor();
+        public IEnumerable<FModel> getPendingUploadsBatch()
         {
-            _fileModel = fileModel ?? throw new ArgumentNullException(nameof(fileModel));
-            _fileProcessor = fileProcessor ?? throw new ArgumentNullException(nameof(fileProcessor));
+            int batchSize = 10;
+            return model.getBackedUpNull(batchSize);
         }
 
-        public IEnumerable<FModel> GetPendingUploadsBatch(int batchSize = 10)
+        public int totalFilesInDb()
         {
-            return _fileModel.GetBackedUpNull(batchSize);
+            return this.model.totalScannedCount();
         }
 
-        public int TotalFilesInDb()
-        {
-            return _fileModel.TotalScannedCount();
-        }
 
         public string GetDeletedFolder(string path)
         {
-            try
+            string[] folders = path.Split('\\'); // Split the path by folder separator
+            string currentPath = string.Empty;
+
+            int folderCounter = 0;
+
+            foreach (string folder in folders)
             {
-                var folders = path.Split(Path.DirectorySeparatorChar);
-                var currentPath = string.Empty;
+                var append = folderCounter == folders.Length - 1 ? "" : "\\";
+                folderCounter++;
 
-                foreach (var folder in folders)
+                currentPath = Path.Combine(currentPath, folder + append); // Build the current path
+
+                if (File.Exists(currentPath))
                 {
-                    currentPath = Path.Combine(currentPath, folder);
-
-                    if (!Directory.Exists(currentPath))
-                    {
-                        return Path.GetDirectoryName(currentPath);
-                    }
+                    return null;
+                }
+                // Check if the folder exists, if not return the previous path
+                if (!Directory.Exists(currentPath))
+                {
+                    return Path.GetDirectoryName(currentPath).Replace("\\", @"\");
                 }
             }
-            catch (Exception ex)
-            {
-                Logger.Log(ex, "Error detecting deleted folder");
-            }
-
-            return null;
+            return null; // Return null if no folder was deleted
         }
 
-        public async Task UploadFileAsync(FModel file, string backupId)
+        public async Task uploadFile(FModel file, string backupId)
         {
             try
             {
-                if (!File.Exists(file.FilePath))
+                string readFrom = file.file_path;
+                if (!File.Exists(file.file_path))
                 {
-                    if (file.FileBackedUp == "1")
+
+                    if (file.file_backed_up == "1")
                     {
-                        await ReportDeletedFileAsync(backupId, file.FilePath);
+                        // report deleted only when the file has previously been backed up.
+                        try
+                        {
+                            await this.reportDeletedFile(backupId, file.file_path);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Log(ex, "---vvvv-A--");
+                        }
                     }
 
-                    var deletedFolder = GetDeletedFolder(file.FilePath);
-                    if (deletedFolder != null)
+                    // Detect if a deleted subfolder is the cause of the deletion of the file.
+                    // In that case more than a file could have been deleted (could be thousands of files) and if they haven't been uploaded we can simply remove them.
+                    var deletedPath = GetDeletedFolder(file.file_path);
+                    if (deletedPath != null)
                     {
-                        _fileModel.DeleteStartsWithPathAndHasBackedUp(deletedFolder);
+                        // A folder was deleted. Delete all files in the database that belonged to that folder and that haven't been backed up.
+                        this.model.deleteStartsWithPathAndHastBackedUp(deletedPath);
                     }
-                    return;
                 }
 
-                if (FileProcessor.FileCanBeRead(file.FilePath))
+                if (FileProcessor.FileCanBeRead(file.file_path))
                 {
-                    var response = await Api.UploadFileAsync(License, backupId, file.FilePath, file.FilePath);
-                    response.EnsureSuccessStatusCode();
-                    _fileModel.MarkAsBackedUp(file.FileId);
+                    try
+                    {
+                        var response = await this.api.uploadFile(this.license, backupId, file.file_path, readFrom);
+                        response.EnsureSuccessStatusCode();
+                        this.model.markAsBackedUp(file.file_id);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex, "--vvvv--001--");
+                        this.model.markAsFailed(file.file_id);
+                    }
                 }
                 else
                 {
-                    _fileModel.MarkAsFailed(file.FileId);
+                    // NOTE: Here we would previously try to create a shadow copy (VSS) but it would create some issues in the user's machine. That code got removed.
+                    this.model.markAsFailed(file.file_id);
                 }
             }
             catch (Exception ex)
             {
-                Logger.Log(ex, "Error uploading file");
-                _fileModel.MarkAsFailed(file.FileId);
+                Logger.Log(ex, "---vvvv-03--");
             }
         }
 
-        public async Task UploadBatchAsync(string backupId)
+        public async Task uploadBatch(string backupId)
         {
-            foreach (var file in GetPendingUploadsBatch())
+            IEnumerable<FModel>? filesToUpload = this.getPendingUploadsBatch();
+            foreach (var fileToUpload in filesToUpload)
             {
-                if (await Api.IsServerResponseOkAsync())
+                var crs = await this.api.isServerResponseOk();
+                if (crs)
                 {
-                    await UploadFileAsync(file, backupId);
+                    await this.uploadFile(fileToUpload, backupId);
                 }
                 else
                 {
                     break;
                 }
             }
+            filesToUpload = null;
         }
 
-        public async Task ReportDeletedFilesAsync(string backupId)
+        public async Task reportDeletedFiles(string? backupId)
         {
-            foreach (var file in _fileModel.ListBackedUp())
+            try
             {
-                if (!File.Exists(file.FilePath))
+                if (backupId != null)
                 {
-                    await ReportDeletedFileAsync(backupId, file.FilePath);
+                    var allFiles = this.model.listBackedup();
+
+                    foreach (var f in allFiles)
+                    {
+                        if (!File.Exists(f.file_path) && f.file_path != null)
+                        {
+                            await this.reportDeletedFile(backupId, f.file_path);
+                        }
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex, "---vvvv-04--");
             }
         }
 
-        public async Task ReportDeletedFileAsync(string backupId, string filePath)
+        public async Task reportDeletedFile(string backupId, string filePath)
         {
-            var response = await Api.ReportDeletedFileAsync(License, backupId, filePath);
+            var response = await this.api.reportDeletedFile(this.license, backupId, filePath);
             response.EnsureSuccessStatusCode();
-            _fileModel.MarkAsDeleted(filePath);
+            this.model.markAsDeleted(filePath);
         }
 
-        public void ResetFailed()
+        public void resetFailed()
         {
-            _fileModel.ResetFailed();
+            this.model.resetFailed();
         }
 
-        public int GetPendingFilesCount()
+        public int getPendingFilesCount()
         {
-            return _fileModel.PendingFilesCount();
+            return this.model.pendingFilesCount();
         }
+
     }
+
+
 }

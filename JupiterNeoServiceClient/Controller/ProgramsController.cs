@@ -10,40 +10,28 @@ namespace JupiterNeoServiceClient.Controllers
 {
     public class ProgramsController : BaseController
     {
-        private readonly ProgramListFetcher _programListFetcher;
 
-        public ProgramsController(
-            ProgramListFetcher programListFetcher,
-            MetadataModel metaModel,
-            JpApi api
-        ) : base(metaModel, api)
+        public async Task<bool> notifyPrograms()
         {
-            _programListFetcher = programListFetcher ?? throw new ArgumentNullException(nameof(programListFetcher));
+
+            bool wasNotified = false;
+            if (this.license != null)
+            {
+                try
+                {
+                    ProgramListFetcher programListFetcher = new ProgramListFetcher();
+                    List<string> programs = programListFetcher.GetInstalledProgramsList();
+                    var response = await this.api.NotifyInstalledPrograms(this.license, programs);
+                    response.EnsureSuccessStatusCode();
+                    wasNotified = true;
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex, "---vvvv-pe-01--");
+                }
+            }
+            return wasNotified;
         }
 
-        public async Task<bool> NotifyProgramsAsync()
-        {
-            if (string.IsNullOrEmpty(License))
-            {
-                throw new InvalidOperationException("License is not set.");
-            }
-
-            try
-            {
-                // Obtener lista de programas instalados
-                List<string> installedPrograms = _programListFetcher.GetInstalledProgramsList();
-
-                // Enviar la lista a través de la API
-                var response = await Api.NotifyInstalledProgramsAsync(License, installedPrograms);
-                response.EnsureSuccessStatusCode();
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex, "Error notifying programs in ProgramsController");
-                return false;
-            }
-        }
     }
 }

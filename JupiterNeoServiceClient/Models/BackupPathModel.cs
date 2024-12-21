@@ -7,12 +7,11 @@ namespace JupiterNeoServiceClient.Models
 {
     public class BackupPathNoId
     {
-        public string bapa_path { get; set; } = string.Empty;
+        public string? bapa_path { get; set; }
 
         public BackupPathNoId()
         {
         }
-
         public BackupPathNoId(string path)
         {
             this.bapa_path = path;
@@ -21,57 +20,57 @@ namespace JupiterNeoServiceClient.Models
 
     public class FullModel : BackupPathNoId
     {
-        public int bapa_id { get; set; }
-
         public FullModel()
         {
-        }
 
+        }
         public FullModel(string path) : base(path)
         {
         }
+
+        public int bapa_id { get; set; }
     }
 
     public class BackupPathModel : BaseModel
     {
         public enum fd { ID, PATH }
-
         public BackupPathModel()
         {
             this.TableName = "backup_paths";
-            this.fields = new Dictionary<Enum, string>
-            {
-                [fd.ID] = "bapa_id",
-                [fd.PATH] = "bapa_path"
-            };
+            this.fields = new Dictionary<Enum, string>();
+            this.fields[fd.ID] = "bapa_id";
+            this.fields[fd.PATH] = "bapa_path";
         }
 
         public FullModel? byPath(string path)
         {
-            return this.query()
-                       .Where(fields[fd.PATH], path)
-                       .Get<FullModel>()
-                       .FirstOrDefault();
+            if (fields == null)
+            {
+                throw new Exception("[byPath] cannot be null");
+            }
+            return this.query().Where(fields[fd.PATH], path).Get<FullModel>().FirstOrDefault();
         }
 
-        public bool ExistsPath(string path)
+        public bool existsPath(string path)
         {
             return this.byPath(path) != null;
         }
 
-        public List<FullModel> GetAllPaths()
+        public List<FullModel> getAllPaths()
         {
             return this.query().Get<FullModel>().ToList();
         }
 
-        public void DeleteByPath(string path)
+        public void deleteByPath(string path)
         {
-            this.query()
-                .Where(fields[fd.PATH], path)
-                .Delete();
+            if (fields == null)
+            {
+                throw new Exception("[deleteByPath] cannot be null");
+            }
+            this.query().Where(this.fields[fd.PATH], path).Delete();
         }
 
-        public void AddPath(string path)
+        public void addPath(string path)
         {
             var insertData = new FullModel(path);
             this.query().Insert(insertData);

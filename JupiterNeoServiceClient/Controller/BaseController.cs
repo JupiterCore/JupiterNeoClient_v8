@@ -8,19 +8,16 @@ namespace JupiterNeoServiceClient.Controllers
 {
     public class BaseController
     {
-        protected readonly MetadataModel MetaModel;
-        protected readonly JpApi Api;
-        protected string License { get; private set; } = string.Empty;
 
-        // Constructor
-        public BaseController(MetadataModel metaModel, JpApi api)
+        public MetadataModel metaModel = new MetadataModel();
+        public string license = "";
+        public JpApi api = new JpApi();
+
+        public BaseController()
         {
-            MetaModel = metaModel ?? throw new ArgumentNullException(nameof(metaModel));
-            Api = api ?? throw new ArgumentNullException(nameof(api));
-
             try
             {
-                License = MetaModel.getLicense();
+                this.license = metaModel.getLicense();
             }
             catch (Exception ex)
             {

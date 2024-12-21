@@ -6,41 +6,54 @@ using System.Net.NetworkInformation;
 
 namespace JupiterNeoServiceClient.classes
 {
+
     public static class Helpers
     {
-        public static string Today()
+        public static string today()
         {
-            return DateTime.Now.ToString("yyyy-MM-dd");
+            DateTime currentDate = DateTime.Now;
+            return currentDate.ToString("yyyy-MM-dd");
         }
 
         public static List<string> DirSearch(string sDir, string[] extensions)
         {
-            var files = new List<string>();
+            List<string> files = new List<string>();
             try
             {
-                // Buscar archivos en el directorio actual que coincidan con las extensiones.
-                files.AddRange(Directory.EnumerateFiles(sDir)
-                    .Where(f => extensions.Contains(Path.GetExtension(f))));
-
-                // Procesar subdirectorios recursivamente.
-                foreach (string d in Directory.EnumerateDirectories(sDir))
+                foreach (string f in Directory.GetFiles(sDir))
                 {
-                    if (IsExcludedFolder(d))
-                        continue;
+                    if (extensions.Contains(Path.GetExtension(f)))
+                    {
+                        files.Add(f);
+                    }
+                }
+                foreach (string d in Directory.GetDirectories(sDir))
+                {
+                    try
+                    {
+                        // Exclude temporary folders and folders that are not worth scanning
+                        if (IsExcludedFolder(d))
+                        {
+                            continue;
+                        }
 
-                    files.AddRange(DirSearch(d, extensions));
+                        files.AddRange(DirSearch(d, extensions));
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        // Handle or ignore the unauthorized access exception for the directory
+                        // Here, we're simply skipping the inaccessible directory
+                        continue;
+                    }
                 }
             }
             catch (UnauthorizedAccessException)
             {
-                // Manejar carpetas sin permisos de acceso.
-                // Opcional: Loggear el acceso denegado si se implementa un sistema de logging.
+                // Handle or ignore the unauthorized access exception for the current directory
+                return files; // Returning the files collected so far
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                // Manejar errores generales.
-                // Opcional: Loggear o registrar errores.
-                Console.WriteLine($"Error in DirSearch: {ex.Message}");
             }
 
             return files;
@@ -50,65 +63,92 @@ namespace JupiterNeoServiceClient.classes
         {
             string folderName = Path.GetFileName(folderPath);
 
-            // Excluir carpetas con nombres específicos.
+            // Exclude temporary folders based on specific criteria
             if (folderName.StartsWith("~") || folderName.StartsWith("."))
+            {
                 return true;
+            }
 
-            // Comparar rutas de carpetas específicas que no deben incluirse.
+            // Compare the full path of the "Temp" folder with a specific path
             string tempFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Temp");
-            if (string.Equals(folderPath, tempFolderPath, StringComparison.OrdinalIgnoreCase))
-                return true;
 
-            if (folderPath.Contains(@"Local\Temp") || folderPath.Contains(@"LocalLow\Temp"))
+            if (String.Equals(folderPath, tempFolderPath, StringComparison.OrdinalIgnoreCase))
+            {
                 return true;
+            }
 
+            string localTemp = @"Local\Temp";
+            string localLowTemp = @"LocalLow\Temp";
+
+            if (folderPath.Contains(localTemp) || folderPath.Contains(localLowTemp))
+            {
+                return true;
+            }
+
+            // Compare the full path of the "Cache" folder with a specific path
             string cacheFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Cache");
-            if (string.Equals(folderPath, cacheFolderPath, StringComparison.OrdinalIgnoreCase))
+            if (String.Equals(folderPath, cacheFolderPath, StringComparison.OrdinalIgnoreCase))
+            {
                 return true;
+            }
 
+
+            // Compare the full path of the local AppData folder with a specific path
             string localAppDataFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            if (string.Equals(folderPath, localAppDataFolderPath, StringComparison.OrdinalIgnoreCase))
+            if (String.Equals(folderPath, localAppDataFolderPath, StringComparison.OrdinalIgnoreCase))
+            {
                 return true;
+            }
 
+            // Compare the full path of the roaming AppData folder with a specific path
             string roamingAppDataFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            if (string.Equals(folderPath, roamingAppDataFolderPath, StringComparison.OrdinalIgnoreCase))
+            if (String.Equals(folderPath, roamingAppDataFolderPath, StringComparison.OrdinalIgnoreCase))
+            {
                 return true;
+            }
 
             return false;
         }
 
         public static bool HasTimeElapsed(string targetTime)
         {
-            if (!TimeSpan.TryParse(targetTime, out TimeSpan target))
-                throw new ArgumentException("Invalid target time format.", nameof(targetTime));
+            // Parse the target time string
+            TimeSpan target;
+            if (!TimeSpan.TryParse(targetTime, out target))
+            {
+                throw new ArgumentException("Invalid target time format.");
+            }
 
-            return DateTime.Now.TimeOfDay >= target;
+            // Get the current time
+            TimeSpan currentTime = DateTime.Now.TimeOfDay;
+
+            // Compare the target time with the current time and return the result
+            return currentTime >= target;
         }
 
         public static bool canPingServer()
         {
             try
             {
-                using Ping myPing = new Ping();
-                string host = Environment.GetEnvironmentVariable("JUPITER_API_HOST") ??
+                Ping myPing = new Ping();
 #if DEBUG
-                    "http://localhost:8080";
+                String host = "http://localhost:8080";
 #else
-                    "https://api.jupiterneo.cloud";
+                String host = "https://api.jupiterneo.cloud";
 #endif
                 byte[] buffer = new byte[32];
                 int timeout = 1000;
                 PingOptions pingOptions = new PingOptions();
-
                 PingReply reply = myPing.Send(host, timeout, buffer, pingOptions);
-                return reply.Status == IPStatus.Success;
+                return (reply.Status == IPStatus.Success);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                // Opcional: loggear el error o registrar información del fallo.
-                Console.WriteLine($"Ping error: {ex.Message}");
                 return false;
             }
         }
+
     }
+
+
 }

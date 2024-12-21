@@ -9,66 +9,56 @@ namespace JupiterNeoServiceClient.Controller
 {
     public class MetaDataController : BaseController
     {
-        private readonly MetadataModel _model;
 
-        public string BackupId { get; private set; }
+        public MetadataModel model = new MetadataModel();
+        public string? backupId { get; set; }
 
-        public MetaDataController(MetadataModel model, JpApi api) : base(model, api)  
+        public string? getBackupId()
         {
-            _model = model;
-        }
-
-        public string GetBackupId()
-        {
-            BackupId = null;
-
+            this.backupId = null;
             try
             {
-                BackupId = _model.getBackupId();
+                this.backupId = model.getBackupId();
             }
             catch (Exception ex)
             {
-                BackupId = null;
+                backupId = null;
                 Logger.Log(ex, "--meta-1--");
             }
-
-            return BackupId;
+            return backupId;
         }
 
-        public async Task RequestBackup(int pendingFilesCount)
+        public async Task requestBackup(int pendingFilesCount)
         {
+
             try
             {
-                if (!string.IsNullOrEmpty(this.License) && BackupId == null)
+                if (this.license != null && backupId == null)
                 {
-                    var backupId = await Api.GetBackupIdAsync(this.License, pendingFilesCount);
+                    var backupId = await this.api.getBackupId(this.license, pendingFilesCount);
 
-                    if (!string.IsNullOrEmpty(backupId))
+                    if (backupId != null && backupId.Length > 0)
                     {
-                        _model.deleteBackup(); // Delete any possible remaining backup record
-                        _model.insertBackupId(backupId); // Add the newest record.
+                        this.model.deleteBackup(); // Delete any possible remaining backup record
+                        this.model.insertBackupId(backupId); // Add the newest record.
                     }
                 }
             }
             catch (Exception ex)
             {
-                BackupId = null;
+                backupId = null;
                 Logger.Log(ex, "--request--");
             }
         }
 
-        public async Task ConcludeBackupAsync(string bid)
+        public async Task concludeBackup(string bid)
         {
-            try
-            {
-                var response = await Api.ConcludeBackupAsync(this.License, bid);
-                response.EnsureSuccessStatusCode();
-                _model.deleteBackup();
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex, "--conclude-backup--");
-            }
+
+            var response = await this.api.concludeBackup(this.license, bid);
+            response.EnsureSuccessStatusCode();
+            this.model.deleteBackup();
         }
+
     }
+
 }

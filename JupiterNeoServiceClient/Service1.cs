@@ -12,6 +12,7 @@ using System.Data.SQLite;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.Versioning;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,9 +26,9 @@ namespace JupiterNeoServiceClient
      * */
     public partial class Service1 : ServiceBase
     {
-        private Timer _schedulesTimer;
-        private Timer _backupsTimer;
-        private Timer _setupBackupsTimer;
+        private System.Timers.Timer? _schedulesTimer;
+        private System.Timers.Timer? _backupsTimer;
+        private System.Timers.Timer? _setupBackupsTimer;
 
         private BackgroundWorker uploadWorker;
         private bool isBackupInProgress { get; set; }
@@ -45,22 +46,41 @@ namespace JupiterNeoServiceClient
         public Service1()
         {
             InitializeComponent();
-            //Setup Service
+
+            // Setup Service
             this.ServiceName = "JupiterNeoClient";
             this.CanStop = true;
             this.CanPauseAndContinue = true;
-            //Setup logging
-            this.AutoLog = false;
-            ((ISupportInitialize)this.EventLog).BeginInit();
-            if (!EventLog.SourceExists(this.ServiceName))
-            {
-                EventLog.CreateEventSource(this.ServiceName, "Application");
-            }
-             ((ISupportInitialize)this.EventLog).EndInit();
-            this.EventLog.Source = this.ServiceName;
-            this.EventLog.Log = "Application";
 
-            // Initialize values.
+            // Setup logging
+            this.AutoLog = false;
+
+            try
+            {
+                if (this.EventLog != null)
+                {
+                    ((ISupportInitialize)this.EventLog).BeginInit();
+
+                    if (!EventLog.SourceExists(this.ServiceName))
+                    {
+                        EventLog.CreateEventSource(this.ServiceName, "Application");
+                    }
+
+                    ((ISupportInitialize)this.EventLog).EndInit();
+                    this.EventLog.Source = this.ServiceName;
+                    this.EventLog.Log = "Application";
+                }
+                else
+                {
+                    Console.WriteLine("EventLog is null. Logging is not configured.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error setting up EventLog: {ex.Message}");
+            }
+
+            // Initialize values
             this.isBackupInProgress = false;
             this.isVerifying = false;
         }
@@ -160,8 +180,10 @@ namespace JupiterNeoServiceClient
         {
             try
             {
-                _schedulesTimer.Stop();
-                _schedulesTimer.Dispose();
+                if (_schedulesTimer != null) {
+                    _schedulesTimer.Stop();
+                    _schedulesTimer.Dispose();
+                }
             }
             catch (Exception ex)
             {
@@ -170,14 +192,16 @@ namespace JupiterNeoServiceClient
 
             try
             {
-                _backupsTimer.Stop();
-                _backupsTimer.Dispose();
+                if (_backupsTimer != null)
+                {
+                    _backupsTimer.Stop();
+                    _backupsTimer.Dispose();
+                }
             }
             catch (Exception ex)
             {
                 writeExceptionLog(ex, "OnStop/Catch - _backupsTimer");
             }
-
 
             try
             {
@@ -195,12 +219,14 @@ namespace JupiterNeoServiceClient
                     writeExceptionLog(ex, "[isBusy]");
                 }
 
-                // Intentar cerrar la conexión SQLite
-                BaseModel.connection.Close();
+                if (BaseModel.connection != null)
+                {
+                    // Intentar cerrar la conexión SQLite
+                    BaseModel.connection.Close();
+                }
                 // Indicar al garbage collector que limpie
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
-
             }
             catch (Exception ex)
             {
@@ -340,7 +366,7 @@ namespace JupiterNeoServiceClient
          * */
         public void startScheduleTimer()
         {
-            _schedulesTimer = new Timer();
+            _schedulesTimer = new System.Timers.Timer();
 #if DEBUG
             _schedulesTimer.Interval = 1000 * 10; // Each second
 #else
@@ -352,7 +378,7 @@ namespace JupiterNeoServiceClient
 
         public void startBackupTimer()
         {
-            _backupsTimer = new Timer();
+            _backupsTimer = new System.Timers.Timer();
 #if DEBUG
             _backupsTimer.Interval = 1000 * 30;
 #else
@@ -364,7 +390,7 @@ namespace JupiterNeoServiceClient
 
         public void startSetupBackupRequirementsTimer()
         {
-            _setupBackupsTimer = new Timer();
+            _setupBackupsTimer = new System.Timers.Timer();
 #if DEBUG
             _setupBackupsTimer.Interval = 1000 * 30;
 #else
@@ -465,7 +491,7 @@ namespace JupiterNeoServiceClient
                     return;
                 }
                 bool shouldBackup = schedulesController.shouldBackup();
-                string backupId = metaDataController.getBackupId();
+                string? backupId = metaDataController.getBackupId();
                 string s = shouldBackup ? "Yes" : "No";
                 bool shouldStop = false;
                 if (shouldBackup && !schedulesController.WasSystemScanned && !isScanning)
@@ -481,7 +507,10 @@ namespace JupiterNeoServiceClient
                         {
                             foreach (var row in paths)
                             {
-                                await schedulesController.ScanPath(row.bapa_path);
+                                if (row.bapa_path != null)
+                                {
+                                    await schedulesController.ScanPath(row.bapa_path);
+                                }
                             }
                             wasUpdated = schedulesController.markScheduleAsScanned();
                         }
@@ -585,10 +614,6 @@ namespace JupiterNeoServiceClient
                 {
                     this.isBackupInProgress = false;
                 }
-                metaDataController = null;
-                schedulesController = null;
-                fileController = null;
-                backupId = null;
             }
             catch (Exception ex)
             {
