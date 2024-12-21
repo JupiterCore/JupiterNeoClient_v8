@@ -11,17 +11,21 @@ namespace JpCommon
 {
     public class BaseHttp
     {
-        public string baseURL { get; set; } = string.Empty;
+        public string? baseURL { get; set; }
         protected static readonly HttpClient client = new HttpClient();
 
-        public StringContent ToJSON(object data)
+        public StringContent toJSON(object data)
         {
             string jsonString = JsonConvert.SerializeObject(data);
-            return new StringContent(jsonString, Encoding.UTF8, "application/json");
+            return new StringContent(jsonString, System.Text.Encoding.UTF8, "application/json");
         }
 
         public string BuildQueryParams(string path, Dictionary<string, string> queryParams)
         {
+            if (this.baseURL == null)
+            {
+                throw new Exception("[BuildQueryParams] can't be null");
+            }
             var builder = new UriBuilder(this.baseURL);
             var query = HttpUtility.ParseQueryString(builder.Query);
             foreach (var kvp in queryParams)
@@ -32,45 +36,53 @@ namespace JpCommon
             return builder.ToString();
         }
 
-        // Método Get con parámetros de consulta (asíncrono)
-        public async Task<HttpResponseMessage> Get(string path, Dictionary<string, string> queryParams)
+        public Task<HttpResponseMessage> get(string path, Dictionary<string, string> queryParams)
         {
-            return await client.GetAsync(this.BuildQueryParams(path, queryParams));
+            return client.GetAsync(this.BuildQueryParams(path, queryParams));
         }
 
-        // Método Get sin parámetros de consulta (asíncrono)
-        public async Task<HttpResponseMessage> Get(string path)
+        public Task<HttpResponseMessage> get(string path)
         {
-            string fullPath = this.baseURL + path;
-            return await client.GetAsync(fullPath);
+            string fullPath = baseURL + path;
+            return client.GetAsync(baseURL + path);
         }
 
-        // Método Post (asíncrono)
-        public async Task<HttpResponseMessage> Post(string path, object data)
+
+        public Task<HttpResponseMessage> post(string path, object data)
         {
-            var jsonData = ToJSON(data);
-            return await client.PostAsync(this.baseURL + path, jsonData);
+            var jsonData = toJSON(data);
+            return client.PostAsync(baseURL + path, jsonData);
         }
 
-        // Método Put (asíncrono)
-        public async Task<HttpResponseMessage> Put(string path, object data)
+
+        public Task put(string path, object data)
         {
-            var jsonData = ToJSON(data);
-            return await client.PutAsync(this.baseURL + path, jsonData);
+            var jsonData = toJSON(data);
+            return client.PutAsync(baseURL + path, jsonData);
         }
 
-        // Método Delete (asíncrono)
-        public async Task<HttpResponseMessage> Delete(string path)
+        public Task delete(string path)
         {
-            return await client.DeleteAsync(this.baseURL + path);
+            return client.PutAsync(baseURL + path, null);
         }
 
-        // Método para obtener respuesta JSON de un HttpResponseMessage (asíncrono)
-        public async Task<dynamic> GetJSON(HttpResponseMessage response)
+        public async Task<dynamic?> getJSON(HttpResponseMessage response)
         {
-            string responseBody = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<dynamic>(responseBody);
-            return result ?? throw new JsonException("Deserialization returned null");
+            string? responseBody = await response.Content.ReadAsStringAsync();
+            if (responseBody == null)
+            {
+                return null;
+            }
+            try
+            {
+                return JsonConvert.DeserializeObject<dynamic>(responseBody);
+            }
+            catch (JsonException ex)
+            {
+                Console.WriteLine($"JSON deserialization failed: {ex.Message}");
+                // Return null if deserialization fails
+                return null;
+            }
         }
-    } 
+    }
 }

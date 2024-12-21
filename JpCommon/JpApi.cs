@@ -10,78 +10,95 @@ namespace JpCommon
 {
     public class BackupSchedule
     {
-        public string[] Paths { get; set; } = Array.Empty<string>();
-        public string[] Schedules { get; set; } = Array.Empty<string>();
+        public string[]? paths { get; set; }
+        public string[]? schedules { get; set; }
     }
 
     public class JpApi : BaseHttp
     {
-        public JpApi() : base()
+
+        public JpApi()
         {
-            baseURL = JpConstants.ApiBaseUrl;
+            this.baseURL = JpConstants.ApiBaseUrl;
         }
 
-        public JpApi(string baseURL) : base()
+        public JpApi(string baseURL)
         {
             this.baseURL = baseURL;
         }
 
-        public async Task<BackupSchedule> GetSchedulesAsync(string license)
+        public async Task<BackupSchedule> getSchedulesAsync(string license)
         {
-            var schedule = new BackupSchedule();
+            BackupSchedule sc = new BackupSchedule();
+            HttpResponseMessage response = await this.get($"/schedule/{license}");
+            response.EnsureSuccessStatusCode();
+            var responseObject = await this.getJSON(response);
+
+            if (responseObject != null)
+            {
+                JArray schedules = responseObject.data.backups;
+                JArray paths = responseObject.data.paths;
+                if (schedules != null)
+                {
+                    sc.paths = paths.ToObject<string[]>();
+                    sc.schedules = schedules.ToObject<string[]>();
+                }
+            }
+            else
+            {
+                string[] emptySchedules = new string[0];
+                sc.schedules = emptySchedules;
+
+            }
+            return sc;
+        }
+
+#nullable enable
+        public async Task<string[]> getExtensions(string license)
+        {
+            string[] list = Array.Empty<string>(); // Use Array.Empty<string>() for clarity and efficiency
             try
             {
-                HttpResponseMessage response = await Get($"/schedule/{license}");
-                response.EnsureSuccessStatusCode();
+                var result = await this.get($"/extension/license/{license}");
+                result.EnsureSuccessStatusCode();
 
-                var responseObject = await GetJSON(response);
-
-                if (responseObject != null)
+                var responseObject = await this.getJSON(result);
+                if (responseObject?.data?.list != null)
                 {
-                    JArray schedules = responseObject.data?.backups ?? new JArray();
-                    JArray paths = responseObject.data?.paths ?? new JArray();
-
-                    schedule.Paths = paths.ToObject<string[]>() ?? Array.Empty<string>();
-                    schedule.Schedules = schedules.ToObject<string[]>() ?? Array.Empty<string>();
+                    // Safely cast to JArray and convert to string[]
+                    JArray data = responseObject.data.list;
+                    list = data.ToObject<string[]>() ?? Array.Empty<string>();
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error fetching schedules: {ex.Message}");
-            }
-
-            return schedule;
-        }
-
-        public async Task<string[]> GetExtensionsAsync(string license)
-        {
-            try
-            {
-                HttpResponseMessage response = await Get($"/extension/license/{license}");
-                response.EnsureSuccessStatusCode();
-
-                var responseObject = await GetJSON(response);
-                JArray data = responseObject.data?.list ?? new JArray();
-
-                return data.ToObject<string[]>() ?? Array.Empty<string>();
-            }
-            catch (Exception ex)
-            {
                 Console.WriteLine($"Error fetching extensions: {ex.Message}");
-                return Array.Empty<string>();
             }
+
+            return list;
         }
 
-        public async Task<string?> GetBackupIdAsync(string license, int expectedFiles)
+
+        public async Task<string?> getBackupId(string license, int expectedFiles)
         {
             try
             {
-                var data = new { expected_files = expectedFiles };
-                HttpResponseMessage response = await Post($"/bucket/start/{license}", data);
-                response.EnsureSuccessStatusCode();
+                object data = new
+                {
+                    expected_files = expectedFiles
+                };
 
-                var responseObject = await GetJSON(response);
-                return responseObject.backupId;
+                var result = await this.post($"/bucket/start/{license}", data);
+                result.EnsureSuccessStatusCode();
+
+                var responseObject = await this.getJSON(result);
+                if (responseObject?.backupId != null)
+                {
+                    return responseObject.backupId.ToString(); // Ensure we safely convert it to a string
+                }
+
+                Console.WriteLine("backupId is null in the response.");
+                return null;
             }
             catch (Exception ex)
             {
@@ -90,85 +107,99 @@ namespace JpCommon
             }
         }
 
-        public async Task<HttpResponseMessage> UploadFileAsync(string license, string backupId, string filePath, string readFromPath)
+        public async Task<HttpResponseMessage> uploadFile(string license, string backupId, string filePath, string readFromPath)
         {
-            using var client = new HttpClient();
-            using var formData = new MultipartFormDataContent();
-
-            try
+            using (HttpClient client = new HttpClient())
             {
-                var fileContent = new ByteArrayContent(await File.ReadAllBytesAsync(readFromPath));
-                formData.Add(fileContent, "file", Path.GetFileName(readFromPath));
-
-                var fileInfo = new FileInfo(filePath);
-                const string dateFormat = "yyyy-MM-dd HH:mm:ss";
-
-                formData.Add(new StringContent(filePath), "file_path");
-                formData.Add(new StringContent(fileInfo.CreationTime.ToString(dateFormat)), "created_at");
-                formData.Add(new StringContent(fileInfo.LastWriteTime.ToString(dateFormat)), "updated_at");
-
-                return await client.PostAsync($"{baseURL}/bucket/{backupId}/{license}", formData);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error uploading file: {ex.Message}");
-                throw;
+                using (var formData = new MultipartFormDataContent())
+                {
+                    var fileContent = new ByteArrayContent(File.ReadAllBytes(readFromPath));
+                    formData.Add(fileContent, "file", Path.GetFileName(readFromPath));
+                    var fileInfo = new FileInfo(filePath);
+                    DateTime createdAt = fileInfo.CreationTime;
+                    DateTime updatedAt = fileInfo.LastWriteTime;
+                    string dateFormat = "yyyy-MM-dd HH:mm:ss";
+                    formData.Add(new StringContent(filePath), "file_path");
+                    formData.Add(new StringContent(createdAt.ToString(dateFormat)), "created_at");
+                    formData.Add(new StringContent(updatedAt.ToString(dateFormat)), "updated_at");
+                    HttpResponseMessage response = await client.PostAsync($"{this.baseURL}/bucket/{backupId}/{license}", formData);
+                    return response;
+                }
             }
         }
 
-        public async Task<HttpResponseMessage> ConcludeBackupAsync(string license, string backupId)
+        public async Task<HttpResponseMessage> concludeBackup(string license, string backupId)
         {
-            var data = new { };
-            return await Post($"/bucket/conclude/{backupId}/{license}", data);
+
+            object data = new
+            {
+            };
+            return await this.post($"/bucket/conclude/{backupId}/{license}", data);
         }
 
-        public async Task<HttpResponseMessage> ReportDeletedFileAsync(string license, string backupId, string path)
+        public async Task<HttpResponseMessage> reportDeletedFile(string license, string backupId, string path)
         {
-            var data = new { backupId, path };
-            return await Post($"/bucket/deleted/{license}", data);
+            object data = new
+            {
+                backupId = backupId,
+                path = path
+            };
+            return await this.post($"/bucket/deleted/{license}", data);
         }
 
-        public async Task<HttpResponseMessage> NotifyInstalledProgramsAsync(string license, List<string> programs)
+        public async Task<HttpResponseMessage> NotifyInstalledPrograms(string license, List<string> programs)
         {
-            var data = new { license, programs };
-            return await Post("/programs/", data);
+            object data = new
+            {
+                license = license,
+                programs = programs
+            };
+            return await this.post("/programs/", data);
         }
 
-        public async Task<bool> IsServerResponseOkAsync()
+        public async Task<bool> isServerResponseOk()
         {
             try
             {
-                HttpResponseMessage response = await Get("/ping");
+                var response = await this.get("/ping");
                 response.EnsureSuccessStatusCode();
                 return true;
             }
-            catch
+            catch (Exception)
             {
                 return false;
             }
         }
 
-        public async Task<HttpResponseMessage> NotifyVersionAsync(string license, string version)
+        public async Task<HttpResponseMessage> notifyVersion(string license, string version)
         {
-            var data = new { license, version };
-            return await Post("/computer/client-version/", data);
-        }
-
-        public async Task<HttpResponseMessage> NotifyPathsAvailableAsync(string license)
-        {
-            var data = new
+            object data = new
             {
-                license,
-                paths_available = JpPaths.ListAvailableBackupPaths()
+                license = license,
+                version = version
             };
-            return await Post("/computer/available-paths", data);
+            return await this.post("/computer/client-version/", data);
         }
 
-        public async Task<HttpResponseMessage> NotifyDisksAvailableAsync(string license, List<string> drivesFound)
+        public async Task<HttpResponseMessage> notifyPathsAvailable(string license)
         {
-            var data = new { drives_found = drivesFound };
-            return await Post($"/computer/report-drives/{license}", data);
+            object data = new
+            {
+                license = license,
+                paths_available = JpPaths.listAvailableBackupPaths()
+            };
+            return await this.post("/computer/available-paths", data);
+        }
+
+        public async Task<HttpResponseMessage> notifyDisksAvailable(string license, List<string> drivesFound)
+        {
+            object data = new
+            {
+                drives_found = drivesFound
+            };
+            return await this.post($"/computer/report-drives/{license}", data);
         }
     }
+
 }
   

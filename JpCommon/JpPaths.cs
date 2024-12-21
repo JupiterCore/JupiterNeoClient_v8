@@ -6,73 +6,65 @@ namespace JpCommon
 {
     public static class JpPaths
     {
+
+
         public static List<string> ListSubPaths(string folderPath)
         {
-            var subfolders = new List<string>();
-
-            if (!string.IsNullOrWhiteSpace(folderPath))
+            List<string> subfolders = new List<string>();
+            if (!string.IsNullOrEmpty(folderPath))
             {
-                try
+                DirectoryInfo[] subDirectories = new DirectoryInfo(folderPath).GetDirectories();
+                foreach (DirectoryInfo subDir in subDirectories)
                 {
-                    DirectoryInfo[] subDirectories = new DirectoryInfo(folderPath).GetDirectories();
-                    foreach (var subDir in subDirectories)
-                    {
-                        subfolders.Add(subDir.FullName);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error al listar subcarpetas en '{folderPath}': {ex.Message}");
+                    subfolders.Add(subDir.FullName);
                 }
             }
-
             return subfolders;
         }
-
         public static string GetMainDrive()
         {
-            // Obtiene todos los discos disponibles en el sistema
-            var drives = DriveInfo.GetDrives();
+            // Get all available drives on the system
+            DriveInfo[] drives = DriveInfo.GetDrives();
 
-            // Busca el disco principal con el sistema operativo instalado
-            foreach (var drive in drives)
+            // Iterate through the drives and find the one with the OS installed
+            foreach (DriveInfo drive in drives)
             {
                 if (drive.IsReady && drive.DriveType == DriveType.Fixed)
                 {
-                    return drive.Name; // Devuelve la unidad principal (por ejemplo, "C:\")
+                    return drive.Name; // Return the drive letter (e.g., "C:\")
                 }
             }
 
-            // Si no encuentra una unidad válida, devuelve una cadena vacía
+            // Return an empty string if no valid drive is found
             return string.Empty;
         }
 
         public static List<string> GetAllFixedDrives()
         {
-            var fixedDrives = new List<string>();
-
-            foreach (var drive in DriveInfo.GetDrives())
+            List<string> fixedDrives = new List<string>();
+            foreach (DriveInfo drive in DriveInfo.GetDrives())
             {
-                if (drive.IsReady && drive.DriveType == DriveType.Fixed)
+                if (drive.DriveType == DriveType.Fixed)
                 {
                     fixedDrives.Add(drive.Name);
                 }
             }
-
             return fixedDrives;
         }
 
-        public static List<string> ListAvailableBackupPaths()
+        public static List<string> listAvailableBackupPaths()
         {
             var fixedDrives = GetAllFixedDrives();
             var allSubfolders = new List<string>();
 
-            foreach (var fixedDrive in fixedDrives)
+            fixedDrives.ForEach(fixedDrive =>
             {
                 var subfoldersInDrive = ListSubPaths(fixedDrive);
-                allSubfolders.AddRange(subfoldersInDrive);
-            }
-
+                subfoldersInDrive.ForEach(path =>
+                {
+                    allSubfolders.Add(path);
+                });
+            });
             return allSubfolders;
         }
 
@@ -81,19 +73,10 @@ namespace JpCommon
             string tempFolderPath = Path.GetTempPath();
             string uniqueId = Guid.NewGuid().ToString("N");
             string temporaryPath = Path.Combine(tempFolderPath, uniqueId);
-
-            try
-            {
-                Directory.CreateDirectory(temporaryPath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error al crear el directorio temporal: {ex.Message}");
-                throw;
-            }
-
+            Directory.CreateDirectory(temporaryPath);
             return temporaryPath;
         }
+
     }
 }
 

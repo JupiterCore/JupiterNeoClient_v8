@@ -1,1 +1,35 @@
 .vs/
+
+# .NET specific
+bin/
+obj/
+
+# User-specific files
+.idea/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Windows image file caches
+Thumbs.db
+Desktop.ini
+
+# JetBrains Rider
+.idea/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Node.js dependencies (if using Node in your .NET project)
+node_modules/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# ASP.NET Core build artifacts
+wwwroot/
