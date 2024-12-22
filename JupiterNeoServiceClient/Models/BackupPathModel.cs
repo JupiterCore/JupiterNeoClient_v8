@@ -33,13 +33,13 @@ namespace JupiterNeoServiceClient.Models
 
     public class BackupPathModel : BaseModel
     {
-        public enum fd { ID, PATH }
+        public enum FD { ID, PATH }
         public BackupPathModel()
         {
             this.TableName = "backup_paths";
             this.fields = new Dictionary<Enum, string>();
-            this.fields[fd.ID] = "bapa_id";
-            this.fields[fd.PATH] = "bapa_path";
+            this.fields[FD.ID] = "bapa_id";
+            this.fields[FD.PATH] = "bapa_path";
         }
 
         public FullModel? byPath(string path)
@@ -48,7 +48,7 @@ namespace JupiterNeoServiceClient.Models
             {
                 throw new Exception("[byPath] cannot be null");
             }
-            return this.query().Where(fields[fd.PATH], path).Get<FullModel>().FirstOrDefault();
+            return this.query().Where(fields[FD.PATH], path).Get<FullModel>().FirstOrDefault();
         }
 
         public bool existsPath(string path)
@@ -67,7 +67,7 @@ namespace JupiterNeoServiceClient.Models
             {
                 throw new Exception("[deleteByPath] cannot be null");
             }
-            this.query().Where(this.fields[fd.PATH], path).Delete();
+            this.query().Where(this.fields[FD.PATH], path).Delete();
         }
 
         public void addPath(string path)

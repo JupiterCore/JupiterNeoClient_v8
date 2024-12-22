@@ -48,10 +48,6 @@ namespace JpCommon
 
                 }
 
-
-
-                Console.WriteLine("Tengo el EM");
-
             }
 
             catch (Exception ex)

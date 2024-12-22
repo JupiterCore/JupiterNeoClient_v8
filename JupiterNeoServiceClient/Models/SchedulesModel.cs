@@ -21,18 +21,18 @@ namespace JupiterNeoServiceClient.Models
     public class SchedulesModel : BaseModel
     {
 
-        public enum fd { ID, DATE, TIME, STARTED, COMPLETED };
+        public enum FD { ID, DATE, TIME, STARTED, COMPLETED };
 
         public SchedulesModel()
         {
             this.TableName = "backup_schedule";
             this.fields = new Dictionary<Enum, string>();
 
-            this.fields[fd.ID] = "basc_id";
-            this.fields[fd.DATE] = "basc_date";
-            this.fields[fd.TIME] = "basc_time";
-            this.fields[fd.STARTED] = "basc_started";
-            this.fields[fd.COMPLETED] = "basc_completed";
+            this.fields[FD.ID] = "basc_id";
+            this.fields[FD.DATE] = "basc_date";
+            this.fields[FD.TIME] = "basc_time";
+            this.fields[FD.STARTED] = "basc_started";
+            this.fields[FD.COMPLETED] = "basc_completed";
 
         }
 
@@ -46,8 +46,8 @@ namespace JupiterNeoServiceClient.Models
 
             string today = Helpers.today();
             this.query()
-                .Where(fields[fd.DATE], "<>", today)
-                .WhereNotNull(fields[fd.COMPLETED])
+                .Where(fields[FD.DATE], "<>", today)
+                .WhereNotNull(fields[FD.COMPLETED])
                 .Delete();
         }
 
@@ -58,7 +58,7 @@ namespace JupiterNeoServiceClient.Models
                 throw new Exception("[] fields is null");
             }
             string today = Helpers.today();
-            return this.query().Where(fields[fd.DATE], today).Where(fields[fd.TIME], time).Get<SModel>().FirstOrDefault<SModel>();
+            return this.query().Where(fields[FD.DATE], today).Where(fields[FD.TIME], time).Get<SModel>().FirstOrDefault<SModel>();
         }
 
         public SModel? getSchedue(string scheduleId)
@@ -67,7 +67,7 @@ namespace JupiterNeoServiceClient.Models
             {
                 throw new Exception("[] fields is null");
             }
-            return this.query().Where(fields[fd.ID], scheduleId).Get<SModel>().FirstOrDefault();
+            return this.query().Where(fields[FD.ID], scheduleId).Get<SModel>().FirstOrDefault();
         }
 
         public SModel? getUncompletedBackup()
@@ -77,8 +77,8 @@ namespace JupiterNeoServiceClient.Models
                 throw new Exception("[] fields is null");
             }
             return this.query()
-                    .Where(fields[fd.STARTED], 1)
-                    .Where(fields[fd.COMPLETED], 0)
+                    .Where(fields[FD.STARTED], 1)
+                    .Where(fields[FD.COMPLETED], 0)
                     .Get<SModel>().FirstOrDefault();
         }
 
@@ -94,9 +94,9 @@ namespace JupiterNeoServiceClient.Models
             }
             string today = Helpers.today();
             return this.query()
-                    .Where(fields[fd.STARTED], 0)
-                    .Where(fields[fd.COMPLETED], 0)
-                    .Where(fields[fd.DATE], today)
+                    .Where(fields[FD.STARTED], 0)
+                    .Where(fields[FD.COMPLETED], 0)
+                    .Where(fields[FD.DATE], today)
                     .Get<SModel>()
                     .FirstOrDefault();
         }
@@ -109,9 +109,9 @@ namespace JupiterNeoServiceClient.Models
             }
             string today = Helpers.today();
             return this.query()
-                    .Where(fields[fd.STARTED], 0)
-                    .Where(fields[fd.COMPLETED], 0)
-                    .Where(fields[fd.DATE], today)
+                    .Where(fields[FD.STARTED], 0)
+                    .Where(fields[FD.COMPLETED], 0)
+                    .Where(fields[FD.DATE], today)
                     .Get<SModel>();
         }
 
@@ -122,7 +122,7 @@ namespace JupiterNeoServiceClient.Models
                 throw new Exception("[] fields is null");
             }
             m.basc_started = 1;
-            this.query().Where(fields[fd.ID], m.basc_id)
+            this.query().Where(fields[FD.ID], m.basc_id)
                 .Update(m);
         }
 
@@ -134,7 +134,7 @@ namespace JupiterNeoServiceClient.Models
             }
             m.basc_completed = 1;
             this.query()
-                .Where(fields[fd.ID], m.basc_id)
+                .Where(fields[FD.ID], m.basc_id)
                 .Update(m);
         }
 
@@ -157,7 +157,7 @@ namespace JupiterNeoServiceClient.Models
             }
             schedule.basc_scanned = 1;
             this.query()
-                .Where(fields[fd.ID], schedule.basc_id)
+                .Where(fields[FD.ID], schedule.basc_id)
                 .Update(schedule);
         }
 

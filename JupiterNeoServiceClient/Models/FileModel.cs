@@ -25,21 +25,21 @@ namespace JupiterNeoServiceClient.Models
 
     public class FileModel : BaseModel
     {
-        public enum fd { ID, PATH, ADDED_AT, CREATED_AT, UPDATED_AT, DELETED_AT, BACKED_UP, FAILED_ATTEMPTS }
+        public enum FD { ID, PATH, ADDED_AT, CREATED_AT, UPDATED_AT, DELETED_AT, BACKED_UP, FAILED_ATTEMPTS }
 
         public FileModel()
         {
             this.TableName = "file";
 
             fields = new Dictionary<Enum, string>();
-            fields[fd.ID] = "file_id";
-            fields[fd.PATH] = "file_path";
-            fields[fd.ADDED_AT] = "file_added_at";
-            fields[fd.CREATED_AT] = "file_created_at";
-            fields[fd.UPDATED_AT] = "file_updated_at";
-            fields[fd.DELETED_AT] = "file_deleted_at";
-            fields[fd.BACKED_UP] = "file_backed_up";
-            fields[fd.FAILED_ATTEMPTS] = "file_failed_attempts";
+            fields[FD.ID] = "file_id";
+            fields[FD.PATH] = "file_path";
+            fields[FD.ADDED_AT] = "file_added_at";
+            fields[FD.CREATED_AT] = "file_created_at";
+            fields[FD.UPDATED_AT] = "file_updated_at";
+            fields[FD.DELETED_AT] = "file_deleted_at";
+            fields[FD.BACKED_UP] = "file_backed_up";
+            fields[FD.FAILED_ATTEMPTS] = "file_failed_attempts";
         }
 
         public FModel? fileByPath(string? filePath)
@@ -52,7 +52,7 @@ namespace JupiterNeoServiceClient.Models
             }
 
             var result = this.query()
-                            .Where(fields[fd.PATH], filePath)
+                            .Where(fields[FD.PATH], filePath)
                             .Get<FModel>()
                             .FirstOrDefault();
 
@@ -84,7 +84,7 @@ namespace JupiterNeoServiceClient.Models
                 file.file_updated_at = updatedAt;
                 file.file_backed_up = null;
                 file.file_deleted_at = null;
-                return this.Execute(this.query().Where(fields[fd.ID], file.file_id).AsUpdate(file));
+                return this.Execute(this.query().Where(fields[FD.ID], file.file_id).AsUpdate(file));
             }
             else
             {
@@ -98,7 +98,7 @@ namespace JupiterNeoServiceClient.Models
             {
                 throw new Exception("[getBackedUpNull] cannot be null");
             }
-            return this.query().WhereNull(fields[fd.BACKED_UP]).Limit(batchSize).Get<FModel>();
+            return this.query().WhereNull(fields[FD.BACKED_UP]).Limit(batchSize).Get<FModel>();
         }
 
         public IEnumerable<FModel> getTotalFiles()
@@ -113,8 +113,8 @@ namespace JupiterNeoServiceClient.Models
                 throw new Exception("[getBackedUpNull] cannot be null");
             }
             Dictionary<string, dynamic> data = new Dictionary<string, dynamic>();
-            data.Add(fields[fd.BACKED_UP], 1);
-            var query = this.query().Where(fields[fd.ID], id).AsUpdate(data);
+            data.Add(fields[FD.BACKED_UP], 1);
+            var query = this.query().Where(fields[FD.ID], id).AsUpdate(data);
             this.Execute(query);
         }
 
@@ -124,7 +124,7 @@ namespace JupiterNeoServiceClient.Models
             {
                 throw new Exception("[getBackedUpNull] cannot be null");
             }
-            return this.query().Where(fields[fd.ID], id).Get<FModel>().FirstOrDefault<FModel>();
+            return this.query().Where(fields[FD.ID], id).Get<FModel>().FirstOrDefault<FModel>();
         }
 
         public void markAsFailed(int id, int forcedCount = -1)
@@ -135,15 +135,15 @@ namespace JupiterNeoServiceClient.Models
             {
                 int failedCount = forcedCount >= 0 ? forcedCount : (file.file_failed_attempts + 1);
                 Dictionary<string, dynamic> data = new Dictionary<string, dynamic>();
-                data.Add(fields[fd.FAILED_ATTEMPTS], failedCount);
+                data.Add(fields[FD.FAILED_ATTEMPTS], failedCount);
 
                 if (failedCount >= 3)
                 {
                     // Si se ha intentado hacer el backup del archivo y ha fallado por 3 veces se debe marcar como backed up para evitar que esto detenga el resto del backup.
-                    data.Add(fields[fd.BACKED_UP], 1);
+                    data.Add(fields[FD.BACKED_UP], 1);
                 }
 
-                var query = this.query().Where(fields[fd.ID], id).AsUpdate(data);
+                var query = this.query().Where(fields[FD.ID], id).AsUpdate(data);
                 this.Execute(query);
             }
             else
@@ -161,8 +161,8 @@ namespace JupiterNeoServiceClient.Models
                 throw new Exception("[getBackedUpNull] cannot be null");
             }
             return this.query()
-                .Where(fields[fd.BACKED_UP], 1)
-                .WhereNull(fields[fd.DELETED_AT]) // No mostrar los archivos borrados
+                .Where(fields[FD.BACKED_UP], 1)
+                .WhereNull(fields[FD.DELETED_AT]) // No mostrar los archivos borrados
                 .Get<FModel>();
         }
 
@@ -173,7 +173,7 @@ namespace JupiterNeoServiceClient.Models
                 throw new Exception("[getBackedUpNull] cannot be null");
             }
             this.query()
-                .WhereStarts(fields[fd.PATH], startsWith)
+                .WhereStarts(fields[FD.PATH], startsWith)
                 .Delete();
         }
 
@@ -185,7 +185,7 @@ namespace JupiterNeoServiceClient.Models
                 throw new Exception("[markAsDeleted] cannot be null");
             }
             file.file_deleted_at = Helpers.today();
-            return this.Execute(this.query().Where(fields[fd.ID], file.file_id).AsUpdate(file));
+            return this.Execute(this.query().Where(fields[FD.ID], file.file_id).AsUpdate(file));
         }
 
         public void resetFailed()
@@ -194,9 +194,9 @@ namespace JupiterNeoServiceClient.Models
                 throw new Exception("[resetFailed] Fields cannot be null");
             }
             var updateData = new Dictionary<string, dynamic>();
-            updateData.Add(fields[fd.BACKED_UP], "");
-            updateData.Add(fields[fd.FAILED_ATTEMPTS], 0);
-            this.Execute(this.query().Where(fields[fd.FAILED_ATTEMPTS], ">", 0).AsUpdate(updateData));
+            updateData.Add(fields[FD.BACKED_UP], "");
+            updateData.Add(fields[FD.FAILED_ATTEMPTS], 0);
+            this.Execute(this.query().Where(fields[FD.FAILED_ATTEMPTS], ">", 0).AsUpdate(updateData));
         }
 
 
@@ -207,7 +207,7 @@ namespace JupiterNeoServiceClient.Models
                 throw new Exception("[pendingFilesCount] cannot be null");
             }
             return this.query()
-                .WhereNull(fields[fd.BACKED_UP])
+                .WhereNull(fields[FD.BACKED_UP])
                 .AsCount().FirstOrDefault<int>();
         }
 

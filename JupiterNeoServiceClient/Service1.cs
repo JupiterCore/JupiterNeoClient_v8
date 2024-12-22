@@ -22,7 +22,7 @@ namespace JupiterNeoServiceClient
         private System.Timers.Timer? _backupsTimer;
         private System.Timers.Timer? _setupBackupsTimer;
 
-        private BackgroundWorker uploadWorker;
+        private BackgroundWorker? uploadWorker;
         private bool isBackupInProgress { get; set; }
         private bool isVerifying { get; set; }
         private bool hasStartedNewBackup { get; set; }
@@ -136,23 +136,12 @@ namespace JupiterNeoServiceClient
             {
                 try
                 {
-                    bool canContinue = this.verifyDatabaseIsUpdated();
-                    if (!canContinue)
-                    {
-                        return;
-                    }
-                }
-                catch (Exception)
-                {
-                }
-
-                try
-                {
                     this.startSetupBackupRequirementsTimer();
                     JpDeviceInfo.GetDeviceInfo();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Console.WriteLine(ex.Message);
                 }
 
                 this.startScheduleTimer();
@@ -164,6 +153,7 @@ namespace JupiterNeoServiceClient
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 writeExceptionLog(ex, "OnServiceStart/Catch");
             }
         }
@@ -180,6 +170,7 @@ namespace JupiterNeoServiceClient
             catch (Exception ex)
             {
                 writeExceptionLog(ex, "OnStop/Catch - schedulesTimer");
+                Console.WriteLine(ex.Message);
             }
 
             try
@@ -193,6 +184,7 @@ namespace JupiterNeoServiceClient
             catch (Exception ex)
             {
                 writeExceptionLog(ex, "OnStop/Catch - _backupsTimer");
+                Console.WriteLine(ex.Message);
             }
 
             try
@@ -200,14 +192,17 @@ namespace JupiterNeoServiceClient
                 // Detener todos los timers
                 try
                 {
-                    if (uploadWorker.IsBusy)
-                    {
-                        // Cancelar el trabajo en el background.
-                        uploadWorker.CancelAsync();
+                    if (uploadWorker != null) {
+                        if (uploadWorker.IsBusy)
+                        {
+                            // Cancelar el trabajo en el background.
+                            uploadWorker.CancelAsync();
+                        }
                     }
                 }
                 catch (Exception ex)
                 {
+                    Console.WriteLine(ex.Message);
                     writeExceptionLog(ex, "[isBusy]");
                 }
 
@@ -222,6 +217,7 @@ namespace JupiterNeoServiceClient
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 writeExceptionLog(ex, "OnStop/Catch");
             }
         }
@@ -240,6 +236,7 @@ namespace JupiterNeoServiceClient
             }
             catch (SQLiteException ex)
             {
+                Console.WriteLine(ex.Message);
                 this.EventLog.WriteEntry("[SQLite-Sch/Catch] " + ex.Message);
             }
             catch (Exception ex)
@@ -264,6 +261,7 @@ namespace JupiterNeoServiceClient
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 writeExceptionLog(ex, "verifySc/Catch");
                 this.isVerifying = false;
             }
@@ -285,8 +283,9 @@ namespace JupiterNeoServiceClient
                 result.EnsureSuccessStatusCode();
                 didItNotifyCorrecty = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 didItNotifyCorrecty = false;
             }
             return didItNotifyCorrecty;
@@ -310,8 +309,9 @@ namespace JupiterNeoServiceClient
                 result.EnsureSuccessStatusCode();
                 didNotifyCorrectly = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 didNotifyCorrectly = false;
             }
             return didNotifyCorrectly;
@@ -346,6 +346,7 @@ namespace JupiterNeoServiceClient
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 writeExceptionLog(ex, "notifyVersion");
             }
             return notifiedSuccessfully;
@@ -409,10 +410,9 @@ namespace JupiterNeoServiceClient
             {
                 Console.WriteLine("something failed: " + ex.Message);
             }
-
         }
 
-        public void BackupCheckTimedOut(object sender, ElapsedEventArgs e)
+        public void BackupCheckTimedOut(object? sender, ElapsedEventArgs e)
         {
             try
             {
@@ -438,7 +438,7 @@ namespace JupiterNeoServiceClient
 
             }
         }
-        private void batchUploadWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void batchUploadWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
         {
             this.isBackupInProgress = false;
         }
@@ -466,7 +466,7 @@ namespace JupiterNeoServiceClient
             }
             return wasSuccessful;
         }
-        private async void BackgroundBatchUploads(object sender, DoWorkEventArgs e)
+        private async void BackgroundBatchUploads(object? sender, DoWorkEventArgs e)
         {
             if (this.isBackupInProgress)
             {
