@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static JupiterNeoServiceClient.Models.MetadataModel;
 
 namespace JupiterNeoServiceClient.Models
 {
@@ -178,6 +179,18 @@ namespace JupiterNeoServiceClient.Models
                 return "";
             }
         }
+
+        public bool removeLicense()
+        {
+            if (fields == null || Types == null)
+            {
+                throw new Exception("[removeLicense] fields and Types cannot be null");
+            }
+
+            // Eliminar registros donde meta_type es "license"
+            return this.query().Where(fields[FD.TYPE], Types[TS.LICENSE]).Delete() > 0;
+        }
+
 
     }
 

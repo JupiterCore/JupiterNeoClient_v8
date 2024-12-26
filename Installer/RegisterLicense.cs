@@ -209,7 +209,7 @@ namespace Installer
 
 
             string licence = metadataModel.getLicense();
-            if (licence!= null && licence.Length > 0)
+            if (licence != null && licence.Length > 0)
             {
                 this.textBoxLicense.Text = licence;
             }

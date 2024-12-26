@@ -159,7 +159,11 @@ namespace JupiterNeoServiceClient.Controller
 
         public bool markScheduleAsScanned()
         {
-            SModel schedule = this.sm.getSchedue(this.scheduleId);
+            if (this.scheduleId == null)
+            {
+                return false;
+            }
+            SModel? schedule = this.sm.getSchedue(this.scheduleId);
             if (schedule == null)
             {
                 return false;

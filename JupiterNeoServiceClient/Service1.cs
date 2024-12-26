@@ -78,52 +78,7 @@ namespace JupiterNeoServiceClient
         }
 
 
-        private bool verifyDatabaseIsUpdated()
-        {
-            bool canContinue = false;
-
-            if (isUpdatingDatabase)
-            {
-                canContinue = false;
-                return canContinue;
-            }
-
-            this.isDatabaseUpToDate = this.dbManager.verifyDatabaseIsUpdated();
-
-            if (this.isDatabaseUpToDate)
-            {
-                return true;
-            }
-
-
-            if (!this.isDatabaseUpToDate)
-            {
-                this.isUpdatingDatabase = true;
-                canContinue = false;
-                try
-                {
-                    this.dbManager.updateDatabaseIfNeeded();
-                    canContinue = true;
-                }
-                catch (Exception ex)
-                {
-                    this.EventLog.WriteEntry("[verifyDatabaseIsUpdated] Failed to update" + ex.Message);
-                }
-                finally
-                {
-                    this.isUpdatingDatabase = false;
-                    this.EventLog.WriteEntry("[verifyDatabaseIsUpdated] Finally");
-                }
-            }
-
-            if (!this.isDatabaseUpToDate)
-            {
-                this.EventLog.WriteEntry("[verifyDatabaseIsUpdated] can't continue");
-                canContinue = false;
-            }
-            this.EventLog.WriteEntry("[verifyDatabaseIsUpdated] returnCanContinue --> " + (canContinue ? "yes" : "no"));
-            return canContinue;
-        }
+   
         protected override void OnStart(string[] args)
         {
             this.OnServiceStart();
@@ -226,12 +181,6 @@ namespace JupiterNeoServiceClient
         {
             try
             {
-
-                bool canContinue = this.verifyDatabaseIsUpdated();
-                if (!canContinue)
-                {
-                    return;
-                }
                 await this.verifySchedules();
             }
             catch (SQLiteException ex)
@@ -269,11 +218,6 @@ namespace JupiterNeoServiceClient
 
         private async Task<bool> notifyPathsAsync()
         {
-            bool canContinue = this.verifyDatabaseIsUpdated();
-            if (!canContinue)
-            {
-                return false;
-            }
             bool didItNotifyCorrecty;
             try
             {
@@ -293,12 +237,6 @@ namespace JupiterNeoServiceClient
 
         private async Task<bool> notifyDrivesAsync()
         {
-            bool canContinue = this.verifyDatabaseIsUpdated();
-            if (!canContinue)
-            {
-                return false;
-            }
-
             bool didNotifyCorrectly;
             try
             {
@@ -319,12 +257,6 @@ namespace JupiterNeoServiceClient
 
         private async Task<bool> notifyVersionAsync()
         {
-            bool canContinue = this.verifyDatabaseIsUpdated();
-            if (!canContinue)
-            {
-                return false;
-            }
-
             bool notifiedSuccessfully = false;
             try
             {
@@ -416,11 +348,6 @@ namespace JupiterNeoServiceClient
         {
             try
             {
-                bool canContinue = this.verifyDatabaseIsUpdated();
-                if (!canContinue)
-                {
-                    return;
-                }
                 if (this.isBackupInProgress || !this.wereSchedulesChecked || isScanning)
                 {
                     return;
@@ -447,11 +374,6 @@ namespace JupiterNeoServiceClient
 
         private async Task<bool> notifyProgramsInstalled()
         {
-            bool canContinue = this.verifyDatabaseIsUpdated();
-            if (!canContinue)
-            {
-                return false;
-            }
 
             bool wasSuccessful;
             try

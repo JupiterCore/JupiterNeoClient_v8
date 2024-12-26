@@ -36,9 +36,9 @@ namespace JpCommon
 #if DEBUG
                 Interval = 1_000, // 1 segundo para pruebas en modo DEBUG.
 #else
-                Interval = intervalMs // 2 minutos (por defecto) en producción.
+                Interval = intervalMs, // 2 minutos (por defecto) en producción.
 #endif
-                AutoReset = true,
+                AutoReset = true
             };
 
             _runnerTimer.Elapsed += RunnerTimerElapsedAsync;

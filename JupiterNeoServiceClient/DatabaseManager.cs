@@ -117,10 +117,5 @@ namespace JupiterNeoServiceClient
                 }
             }
         }
-
-        public bool verifyDatabaseIsUpdated()
-        {
-            return this.isNewDatabaseFound() && this.canConnectToNewDatabase();
-        }
     }
 }

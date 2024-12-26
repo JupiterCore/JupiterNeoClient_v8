@@ -2,24 +2,26 @@
 
 namespace Installer
 {
-
-    
     public class MetadataModel : BaseModel
     {
-
         public class MdModelNoId
         {
-            public string? meta_type { get; set; }
-            public string? meta_data { get; set; }
+            public string meta_type { get; set; }
+            public string meta_data { get; set; }
+
+            public MdModelNoId()
+            {
+                this.meta_type = "";
+                this.meta_data = "";
+            }
+
         }
         public class MdModel : MdModelNoId
         {
             public int meta_id { get; set; }
 
         }
-
         internal MdModel model = new MdModel();
-
         public enum FD { ID, TYPE, DATA } // Columnas de la base de datos representadas por un enumerable
         public enum TS { LICENSE, FIRST_BACKUP, BACKUP_ID }
 
@@ -29,12 +31,8 @@ namespace Installer
         {
             this.initialize();
         }
-
-        public MetadataModel(bool initializeDatabase) : base(initializeDatabase)
+        public MetadataModel(bool useNewName) : base(useNewName)
         {
-            /**
-             * Its required to not initialize the database when we want to use the old database.
-             * */
             this.initialize();
         }
 
@@ -57,16 +55,16 @@ namespace Installer
         // ¿Existe un valor con el tipo (type) en meta_type? Algo como: SELECT * FROM metadata where meta_type = type
         public bool hasMetadata(Enum type)
         {
-
-            if (this.fields == null || this.Types == null)
+            if (this.Types == null)
             {
-                throw new Exception("[hasMetadata] fields and Types cant be empty");
+                throw new Exception("[hasMetadata] Types is null");
             }
-
             string field = this.fields[FD.TYPE];
             string value = this.Types[type];
 
-            var result = this.query().Where(field, value).Get<MdModel>();
+            var result = this.Db.Query(this.TableName).Where(field, value).Get<MdModel>();
+
+            //var result = this.query().Where(field, value).Get<MdModel>();
             return result.Count() > 0;
         }
 
@@ -76,58 +74,17 @@ namespace Installer
             return this.hasMetadata(TS.LICENSE);
         }
 
-        public bool hasBackupId()
-        {
-            return this.hasMetadata(TS.BACKUP_ID);
-        }
-
-        public string? getBackupId()
-        {
-
-            if (this.fields == null || this.Types == null)
-            {
-                throw new Exception("[getBackupId] fields and Types cant be null");
-            }
-            var result = this.query().Where(this.fields[FD.TYPE], this.Types[TS.BACKUP_ID]).Get<MdModel>().FirstOrDefault();
-            if (result == null)
-            {
-                return null;
-            }
-            else
-            {
-                return result.meta_data;
-            }
-        }
-
-        public bool insertBackupId(string backupId)
-        {
-            return this.insert(backupId, TS.BACKUP_ID);
-        }
-
-        public bool deleteBackup()
-        {
-            if (this.fields == null || this.Types == null)
-            {
-                throw new Exception("[deleteBackup] fields and types cant be null");
-            }
-            return this.query().Where(this.fields[FD.TYPE], this.Types[TS.BACKUP_ID]).Delete() > 0;
-        }
-
-        // SELECT * FROM meta_type where meta_type = "first_backup"
-        public bool hasFirstBackup()
-        {
-            return this.hasMetadata(TS.FIRST_BACKUP);
-        }
 
         // INSERT INTO metadata (meta_type, meta_data) VALUES (type, data);
         public bool insert(string data, Enum type)
         {
-
             if (this.Types == null)
             {
-                throw new Exception("[insert] Types cant be null");
+                throw new Exception("[insert] Types is null");
             }
-
+            // Dictionary<string, string> allData = new Dictionary<string, string>();
+            // allData.Add(this.fields[fd.TYPE], this.Types[type]);
+            // allData.Add(this.fields[fd.DATA], data);
             var allData = new MdModelNoId();
             allData.meta_type = this.Types[type];
             allData.meta_data = data;
@@ -142,17 +99,11 @@ namespace Installer
             return this.insert(data, TS.LICENSE);
         }
 
-        // INSERT INTO metadata (meta_type, meta_data) VALUES (first_backup, data);
-        public bool insertFirstBackup(string data)
-        {
-            return this.insert(data, TS.FIRST_BACKUP);
-        }
-
         public IEnumerable<MdModel> getType(Enum type)
         {
-            if (this.Types == null || this.fields == null)
+            if (this.Types == null)
             {
-                throw new Exception("[getType] Types and fields cant be null");
+                throw new Exception("[getType] Types is null");
             }
             return this.query().Where(this.fields[FD.TYPE], this.Types[type]).Get<MdModel>();
         }
@@ -163,10 +114,6 @@ namespace Installer
             {
                 var result = this.getType(TS.LICENSE);
                 MdModel first = result.First();
-                if (first == null || first.meta_data == null)
-                {
-                    return "";
-                }
                 return first.meta_data;
             }
             else
@@ -175,7 +122,14 @@ namespace Installer
             }
         }
 
+        public bool removeLicense()
+        {
+            if (this.Types == null)
+            {
+                throw new Exception("[removeLicense] Types is null");
+            }
+            return this.query().Where(fields[FD.TYPE], this.Types[TS.LICENSE]).Delete() > 0;
+        }
+
     }
-
-
 }
