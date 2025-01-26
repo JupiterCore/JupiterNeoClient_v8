@@ -153,7 +153,6 @@ namespace JupiterNeoServiceClient.Models
 
         }
 
-
         public IEnumerable<FModel> listBackedup()
         {
             if (fields == null)
@@ -188,18 +187,6 @@ namespace JupiterNeoServiceClient.Models
             return this.Execute(this.query().Where(fields[FD.ID], file.file_id).AsUpdate(file));
         }
 
-        public void resetFailed()
-        {
-            if (fields == null) {
-                throw new Exception("[resetFailed] Fields cannot be null");
-            }
-            var updateData = new Dictionary<string, dynamic>();
-            updateData.Add(fields[FD.BACKED_UP], "");
-            updateData.Add(fields[FD.FAILED_ATTEMPTS], 0);
-            this.Execute(this.query().Where(fields[FD.FAILED_ATTEMPTS], ">", 0).AsUpdate(updateData));
-        }
-
-
         public int pendingFilesCount()
         {
             if (fields == null)
@@ -210,11 +197,11 @@ namespace JupiterNeoServiceClient.Models
                 .WhereNull(fields[FD.BACKED_UP])
                 .AsCount().FirstOrDefault<int>();
         }
-
         public int totalScannedCount()
         {
             return this.query()
             .AsCount().FirstOrDefault<int>();
         }
     }
+
 }

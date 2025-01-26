@@ -1,69 +1,54 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
-using System.Net.Http;
+﻿using System.Net.Http.Json;
+using JpCommon;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace JupiterNeoServiceClient.Utils
 {
-    public class BaseHttp
+   public class BaseHttp
     {
-        public string baseURL { get; set; }
-        protected static readonly HttpClient client = new HttpClient();
+        private readonly HttpClient _client;
+        public string BaseURL = JpConstants.ApiBaseUrl;
 
-        public StringContent toJSON(object data)
+        public BaseHttp(HttpClient client)
         {
-            string jsonString = JsonConvert.SerializeObject(data);
-            return new StringContent(jsonString, System.Text.Encoding.UTF8, "application/json");
+            _client = client;
         }
 
         public string BuildQueryParams(string path, Dictionary<string, string> queryParams)
         {
-            var builder = new UriBuilder(this.baseURL);
-            var query = HttpUtility.ParseQueryString(builder.Query);
-            foreach (var kvp in queryParams)
-            {
-                query[kvp.Key] = kvp.Value;
-            }
-            builder.Query = query.ToString();
-            return builder.ToString();
+            var uri = new Uri(new Uri(BaseURL), path);
+            return QueryHelpers.AddQueryString(uri.ToString(), queryParams!);
         }
 
-        public Task<HttpResponseMessage> get(string path, Dictionary<string, string> queryParams)
+        public async Task<HttpResponseMessage> GetAsync(string path, Dictionary<string, string>? queryParams = null)
         {
-            return client.GetAsync(this.BuildQueryParams(path, queryParams));
+            var fullPath = queryParams != null ? BuildQueryParams(path, queryParams) : new Uri(new Uri(BaseURL), path).ToString();
+            return await _client.GetAsync(fullPath);
         }
 
-        public Task<HttpResponseMessage> get(string path)
+        public async Task<HttpResponseMessage> PostAsync(string path, object data)
         {
-            string fullPath = baseURL + path;
-            return client.GetAsync(baseURL + path);
+            var fullPath = new Uri(new Uri(BaseURL), path).ToString();
+            return await _client.PostAsJsonAsync(fullPath, data);
         }
 
-        public Task<HttpResponseMessage> post(string path, object data)
+        public async Task<HttpResponseMessage> PutAsync(string path, object data)
         {
-            var jsonData = toJSON(data);
-            return client.PostAsync(baseURL + path, jsonData);
+            var fullPath = new Uri(new Uri(BaseURL), path).ToString();
+            return await _client.PutAsJsonAsync(fullPath, data);
         }
 
-        public Task put(string path, object data)
+        public async Task<HttpResponseMessage> DeleteAsync(string path)
         {
-            var jsonData = toJSON(data);
-            return client.PutAsync(baseURL + path, jsonData);
+            var fullPath = new Uri(new Uri(BaseURL), path).ToString();
+            return await _client.DeleteAsync(fullPath);
         }
 
-        public Task delete(string path)
+        public async Task<T> ReadResponseAsync<T>(HttpResponseMessage response)
         {
-            return client.DeleteAsync(baseURL + path); // Cambié client.PutAsync por client.DeleteAsync para eliminar el recurso
+            response.EnsureSuccessStatusCode(); // Throws an exception if the response is not successful
+            return await response.Content.ReadFromJsonAsync<T>();
         }
 
-        public async Task<dynamic> getJSON(HttpResponseMessage response)
-        {
-            string responseBody = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<dynamic>(responseBody);
-        }
-    } 
+    }
 }

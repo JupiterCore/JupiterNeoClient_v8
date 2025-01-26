@@ -151,4 +151,5 @@ namespace JupiterNeoServiceClient.Models
                 .Update(schedule);
         }
     }
+
 }

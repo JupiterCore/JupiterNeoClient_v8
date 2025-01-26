@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JpCommon\\JpCommon.csproj": {}
+    "C:\\Users\\darku\\Downloads\\JupiterNeoClient_v8-main\\JupiterNeoClient_v8-main\\JpCommon\\JpCommon.csproj": {}
   },
   "projects": {
-    "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JpCommon\\JpCommon.csproj": {
+    "C:\\Users\\darku\\Downloads\\JupiterNeoClient_v8-main\\JupiterNeoClient_v8-main\\JpCommon\\JpCommon.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JpCommon\\JpCommon.csproj",
+        "projectUniqueName": "C:\\Users\\darku\\Downloads\\JupiterNeoClient_v8-main\\JupiterNeoClient_v8-main\\JpCommon\\JpCommon.csproj",
         "projectName": "JpCommon",
-        "projectPath": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JpCommon\\JpCommon.csproj",
-        "packagesPath": "C:\\Users\\GABY\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\GABY\\Desktop\\JupiterNeoClient_v8\\JpCommon\\obj\\",
+        "projectPath": "C:\\Users\\darku\\Downloads\\JupiterNeoClient_v8-main\\JupiterNeoClient_v8-main\\JpCommon\\JpCommon.csproj",
+        "packagesPath": "C:\\Users\\darku\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\darku\\Downloads\\JupiterNeoClient_v8-main\\JupiterNeoClient_v8-main\\JpCommon\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\GABY\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\darku\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -64,7 +64,7 @@
             },
             "System.Drawing.Common": {
               "target": "Package",
-              "version": "[4.7.3, )"
+              "version": "[9.0.1, )"
             },
             "System.Management": {
               "target": "Package",

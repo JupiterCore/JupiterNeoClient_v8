@@ -78,6 +78,33 @@ namespace JpCommon
             return list;
         }
 
+        public async Task<int?> GetBackupIdV2Async(string license)
+        {
+            var result = await this.get($"/backup/{license}");
+            result.EnsureSuccessStatusCode();
+            var responseObject = await this.getJSON(result);
+
+            if (responseObject?.backupId != null)
+            {
+                if (int.TryParse(responseObject.backupId.ToString(), out int backupId))
+                {
+                    return backupId;
+                }
+            }
+            return null;
+        }
+
+
+        public async Task<HttpResponseMessage> UpdateScannedFilesForBackup(string license, int backupId, int totalScannedFiles)
+        {
+            object data = new
+            {
+                scannedFiles = totalScannedFiles
+            };
+            
+            return await this.patch($"/backup/expected-files/{license}/{backupId}", data);
+        }
+
 
         public async Task<string?> getBackupId(string license, int expectedFiles)
         {

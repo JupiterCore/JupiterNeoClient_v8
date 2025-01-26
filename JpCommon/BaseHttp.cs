@@ -54,6 +54,12 @@ namespace JpCommon
             return client.PostAsync(baseURL + path, jsonData);
         }
 
+        public Task<HttpResponseMessage> patch(string path, object data)
+        {
+            var jsonData = toJSON(data);
+            return client.PatchAsync(baseURL + path, jsonData);
+        }
+
 
         public Task put(string path, object data)
         {

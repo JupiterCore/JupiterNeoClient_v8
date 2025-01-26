@@ -160,10 +160,7 @@ namespace JupiterNeoServiceClient.Controllers
             this.model.markAsDeleted(filePath);
         }
 
-        public void resetFailed()
-        {
-            this.model.resetFailed();
-        }
+
 
         public int getPendingFilesCount()
         {

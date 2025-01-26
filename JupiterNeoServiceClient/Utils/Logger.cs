@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
+﻿using JpCommon;
 using System.Text;
 
 namespace JupiterNeoServiceClient.Utils
@@ -13,8 +11,14 @@ namespace JupiterNeoServiceClient.Utils
         static Logger()
         {
             string logFileName = "log.txt"; // Nombre del archivo de log
-            string appDirectory = AppContext.BaseDirectory; // Ruta base de la aplicación
-            logFilePath = Path.Combine(appDirectory, logFileName);
+
+            var filesManager = new JpFilesManager();
+
+            logFilePath = Path.Combine(filesManager.DiskPath!,JpConstants.ClientFolderName, logFileName);
+
+            Console.WriteLine("---------------------------");
+            Console.WriteLine(logFilePath);
+            Console.WriteLine("---------------------------");
         }
 
         public static void Log(Exception? ex, string level)
